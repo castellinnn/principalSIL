@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { ArrowRight, ExternalLink, Layout, Zap, Smartphone, Search } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
@@ -22,23 +19,15 @@ export function WebDesign() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[600px] bg-blue-900/10 rounded-full blur-[150px]" />
         <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[120px]" />
       </div>
-      
+
       <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-        <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
+        <div
         >
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
+          <div
             className="section-kicker mb-5"
           >
             WEB DESIGN
-          </motion.div>
+          </div>
 
           <h2 className="section-title mb-6">
             Un sito bello è solo l&apos;inizio. Deve portarti clienti.
@@ -49,17 +38,13 @@ export function WebDesign() {
 
           <ul className="grid grid-cols-2 gap-4 mb-10">
             {features.map((feature, i) => (
-              <motion.li 
-                key={i} 
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: 0.3 + i * 0.1 }}
+              <li
+                key={i}
                 className="flex items-center text-white/80"
               >
                 <span className="text-primary mr-3 shrink-0">{feature.icon}</span>
                 <span className="font-medium text-sm">{feature.text}</span>
-              </motion.li>
+              </li>
             ))}
           </ul>
 
@@ -82,14 +67,10 @@ export function WebDesign() {
               </a>
             </Button>
           </div>
-        </motion.div>
+        </div>
 
         {/* Mockups Visual */}
-        <motion.div 
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7, delay: 0.2 }}
+        <div
           className="relative h-[400px] sm:h-[450px] md:h-[500px] w-full"
         >
             {/* Mockup principale — cliccabile verso il sito reale */}
@@ -107,7 +88,7 @@ export function WebDesign() {
                 <ExternalLink className="ml-auto h-3 w-3 text-white/30 group-hover:text-[#06B6D4] transition-colors" />
               </div>
               <Image
-                src="/images/principal-sites-preview.png"
+                src="/images/principal-sites-preview.webp"
                 alt="Principal Sites — Sito web esempio"
                 fill
                 sizes="(max-width: 1023px) 92vw, 43vw"
@@ -126,7 +107,7 @@ export function WebDesign() {
           {/* Mockup secondario */}
           <div className="absolute bottom-0 left-0 z-10 h-[215px] w-[72%] overflow-hidden rounded-2xl tech-panel shadow-2xl sm:h-[250px] sm:w-[70%] md:h-[280px] md:w-3/4">
             <Image
-              src="/images/data-analytics-dashboard.jpg"
+              src="/images/data-analytics-dashboard.webp"
               alt="Dashboard di analisi dati su un computer portatile"
               fill
               sizes="(max-width: 1023px) 70vw, 32vw"
@@ -138,7 +119,7 @@ export function WebDesign() {
 
           {/* Decorazione glow */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-primary/10 rounded-full blur-[80px] -z-10" />
-        </motion.div>
+        </div>
       </div>
     </Section>
   );

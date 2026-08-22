@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { MessageSquare, Search, Handshake, Rocket, MessageCircleQuestion } from "lucide-react";
 
@@ -43,39 +40,24 @@ export function Process() {
 
       <div className="relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-12 md:mb-14">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+          <div
             className="section-kicker mb-5"
           >
             UN METODO CHIARO
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+          </div>
+          <h2
             className="section-title mb-4"
           >
             Da ciò che racconti alla soluzione giusta.
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+          </h2>
+          <p
             className="section-lead"
           >
             Un percorso trasparente, costruito sulle tue esigenze e spiegato senza gergo.
-          </motion.p>
+          </p>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.55, delay: 0.15 }}
+        <div
           className="relative mx-auto mb-12 flex max-w-4xl flex-col items-center gap-5 overflow-hidden rounded-2xl border border-cyan-300/15 bg-cyan-300/[0.045] p-6 text-center md:flex-row md:p-7 md:text-left"
         >
           <div className="absolute inset-y-0 left-0 w-px bg-gradient-to-b from-transparent via-cyan-300/80 to-transparent" />
@@ -91,29 +73,21 @@ export function Process() {
               Basta raccontarmi cosa succede: faccio io le domande giuste, individuo la causa e ti propongo una soluzione comprensibile prima di iniziare.
             </p>
           </div>
-        </motion.div>
+        </div>
 
         {/* Desktop: Cards orizzontali con connettori */}
         <div className="hidden md:block">
           <div className="grid grid-cols-4 gap-6 relative">
             {/* Linea orizzontale di connessione */}
             <div className="absolute top-16 left-[12.5%] right-[12.5%] h-px z-0">
-              <motion.div
-                initial={{ scaleX: 0 }}
-                whileInView={{ scaleX: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.2, ease: "easeInOut" }}
+              <div
                 className="w-full h-full bg-gradient-to-r from-blue-500/40 via-indigo-500/40 to-sky-500/40 origin-left"
               />
             </div>
 
             {steps.map((step, index) => (
-              <motion.div
+              <div
                 key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.15 }}
                 className="relative group"
               >
                 {/* Indicatore numerato */}
@@ -133,7 +107,7 @@ export function Process() {
                     {step.description}
                   </p>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -141,12 +115,8 @@ export function Process() {
         {/* Mobile: Cards compatte */}
         <div className="md:hidden space-y-4">
           {steps.map((step, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
               className={`tech-panel p-5 rounded-2xl flex items-start gap-4 bg-gradient-to-r ${step.color}`}
             >
               <div className="w-10 h-10 rounded-full bg-card border-2 border-primary/50 flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
@@ -161,7 +131,7 @@ export function Process() {
                   {step.description}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>

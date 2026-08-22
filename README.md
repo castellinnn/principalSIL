@@ -11,6 +11,8 @@ npm ci
 npm run dev
 ```
 
+Non caricare mai `node_modules`, `.next` o file `.env` nel repository: sono già esclusi dal `.gitignore` e vengono ricreati automaticamente durante la build.
+
 Il sito sarà disponibile su [http://localhost:3000](http://localhost:3000).
 
 ## Verifica prima della pubblicazione

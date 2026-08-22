@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import { SiteLoader } from "@/components/layout/SiteLoader";
 import "./globals.css";
 
 const montserrat = Montserrat({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og.png",
+        url: "/og.jpg",
         width: 1200,
         height: 630,
         alt: "Principal S.I.L. — Synk your world",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Principal S.I.L. | Synk your world",
     description: "Assistenza informatica a Biella e servizi digitali da remoto in tutta Italia.",
-    images: ["/og.png"],
+    images: ["/og.jpg"],
   },
 };
 
@@ -80,6 +80,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground overflow-x-hidden selection:bg-primary/30 selection:text-primary-foreground" suppressHydrationWarning>
+        <SiteLoader />
         {children}
       </body>
     </html>

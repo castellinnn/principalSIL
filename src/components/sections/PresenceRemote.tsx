@@ -1,27 +1,24 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { MapPin, Globe, CheckCircle2, ArrowRight } from "lucide-react";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const coverageNodes = [
-  { x: 310, y: 190, delay: 0.0 },
-  { x: 400, y: 225, delay: 0.08 },
-  { x: 470, y: 235, delay: 0.16 },
-  { x: 355, y: 305, delay: 0.24 },
-  { x: 425, y: 350, delay: 0.32 },
-  { x: 485, y: 420, delay: 0.4 },
-  { x: 515, y: 495, delay: 0.48 },
-  { x: 565, y: 555, delay: 0.56 },
-  { x: 645, y: 615, delay: 0.64 },
-  { x: 630, y: 625, delay: 0.72 },
-  { x: 675, y: 675, delay: 0.8 },
-  { x: 260, y: 620, delay: 0.88 },
-  { x: 250, y: 690, delay: 0.96 },
-  { x: 515, y: 880, delay: 1.04 },
-  { x: 575, y: 895, delay: 1.12 },
+  { x: 310, y: 190 },
+  { x: 400, y: 225 },
+  { x: 470, y: 235 },
+  { x: 355, y: 305 },
+  { x: 425, y: 350 },
+  { x: 485, y: 420 },
+  { x: 515, y: 495 },
+  { x: 565, y: 555 },
+  { x: 645, y: 615 },
+  { x: 630, y: 625 },
+  { x: 675, y: 675 },
+  { x: 260, y: 620 },
+  { x: 250, y: 690 },
+  { x: 515, y: 880 },
+  { x: 575, y: 895 },
 ];
 
 export function PresenceRemote() {
@@ -35,44 +32,28 @@ export function PresenceRemote() {
 
       <div className="relative z-10 max-w-6xl mx-auto">
         <div className="text-center max-w-3xl mx-auto mb-12 md:mb-14">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+          <div
             className="section-kicker mb-5"
           >
             MODALITÀ DI LAVORO
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+          </div>
+          <h2
             className="section-title mb-4"
           >
             Vicino quando serve. Ovunque quando basta una connessione.
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+          </h2>
+          <p
             className="section-lead"
           >
             La modalità giusta in base a ciò di cui hai bisogno.
-          </motion.p>
+          </p>
         </div>
 
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-12 items-start">
           {/* Cards Section */}
           <div className="lg:col-span-7 space-y-4 sm:space-y-6">
             {/* Card 1: In Presenza */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+            <div
               className="tech-panel p-5 sm:p-6 md:p-8 rounded-2xl bg-gradient-to-r from-blue-900/10 via-transparent to-transparent transition-all duration-500 group"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -115,14 +96,10 @@ export function PresenceRemote() {
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1 shrink-0" />
                 </Link>
               </Button>
-            </motion.div>
+            </div>
 
             {/* Card 2: Da Remoto */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.15 }}
+            <div
               className="tech-panel p-5 sm:p-6 md:p-8 rounded-2xl bg-gradient-to-r from-cyan-900/10 via-transparent to-transparent transition-all duration-500 group"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
@@ -166,16 +143,12 @@ export function PresenceRemote() {
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1 shrink-0 text-cyan-400" />
                 </Link>
               </Button>
-            </motion.div>
+            </div>
           </div>
 
           {/* Interactive SVG Visual Section */}
           <div className="lg:col-span-5 lg:sticky lg:top-28 self-start flex justify-center items-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+            <div
               className="relative w-full max-w-sm aspect-[4/5] tech-panel rounded-2xl p-5 sm:p-6 flex flex-col justify-between overflow-hidden"
             >
               {/* Grid background effect */}
@@ -335,30 +308,25 @@ l115 -7 3 -27 c3 -25 5 -26 28 -16 23 11 24 15 18 57 -4 25 -7 60 -7 78 2 68
                   <g mask="url(#italy-coverage-mask)">
                     <g className="text-primary">
                       <circle cx="210" cy="160" r="15" fill="#2563EB" />
-                      <motion.circle
+                      <circle
                         cx="210"
                         cy="160"
                         r="40"
                         stroke="#2563EB"
                         strokeWidth="3"
                         fill="none"
-                        initial={{ scale: 0.5, opacity: 1 }}
-                        animate={{ scale: 2, opacity: 0 }}
-                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeOut" }}
+                        className="map-hq-pulse"
                       />
                     </g>
 
                     {coverageNodes.map((pt, i) => (
                       <g key={i}>
-                        <motion.path
+                        <path
                           d={`M 210,160 Q ${(210 + pt.x)/2 - 50} ${(160 + pt.y)/2 - 50} ${pt.x},${pt.y}`}
                           stroke="url(#gradient-line)"
                           strokeWidth="2"
                           fill="none"
-                          initial={{ pathLength: 0, opacity: 0 }}
-                          whileInView={{ pathLength: 1, opacity: 0.38 }}
-                          viewport={{ once: true }}
-                          transition={{ duration: 1.8, delay: pt.delay, ease: "easeOut" }}
+                          opacity="0.38"
                         />
                         <circle
                           cx={pt.x}
@@ -404,7 +372,7 @@ l115 -7 3 -27 c3 -25 5 -26 28 -16 23 11 24 15 18 57 -4 25 -7 60 -7 78 2 68
                   &ldquo;Assistenza locale. Soluzioni digitali ovunque.&rdquo;
                 </p>
               </div>
-            </motion.div>
+            </div>
           </div>
         </div>
       </div>

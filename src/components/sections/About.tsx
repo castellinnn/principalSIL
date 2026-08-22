@@ -75,7 +75,7 @@ export function About() {
               className="group relative aspect-[4/5] w-full cursor-default overflow-hidden rounded-[1.4rem] border border-cyan-300/15 bg-[#0b111c] shadow-[-20px_28px_80px_rgba(0,0,0,0.42),0_0_45px_rgba(6,182,212,0.08)] will-change-transform"
             >
               <Image
-                src="/images/foto_profilo.jpg"
+                src="/images/foto_profilo.webp"
                 alt="Marco Castellin"
                 fill
                 sizes="(max-width: 767px) calc(100vw - 2.5rem), (max-width: 1279px) 44vw, 448px"

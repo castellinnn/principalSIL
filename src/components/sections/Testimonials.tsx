@@ -1,6 +1,3 @@
-"use client";
-
-import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { ShieldCheck, Zap, HeartHandshake } from "lucide-react";
 
@@ -36,43 +33,27 @@ export function Testimonials() {
       
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="text-center mb-12 md:mb-14">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+          <div
             className="section-kicker mb-5"
           >
             PERCHÉ PRINCIPAL S.I.L.
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
+          </div>
+          <h2
             className="section-title mb-4"
           >
             Tre promesse. In ogni intervento.
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
+          </h2>
+          <p
             className="section-lead"
           >
             Sai sempre cosa sto facendo, perché lo sto facendo e quale risultato aspettarti.
-          </motion.p>
+          </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {guarantees.map((item, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.15 }}
               className={`tech-panel p-7 rounded-2xl text-center flex flex-col items-center hover:-translate-y-1 transition-all duration-500 group bg-gradient-to-b ${item.gradient}`}
             >
               <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-5 text-primary group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(59,130,246,0.2)] transition-all duration-500">
@@ -80,7 +61,7 @@ export function Testimonials() {
               </div>
               <h3 className="text-xl font-semibold text-white mb-3">{item.title}</h3>
               <p className="text-muted-foreground leading-relaxed">{item.description}</p>
-            </motion.div>
+            </div>
           ))}
         </div>
       </div>
