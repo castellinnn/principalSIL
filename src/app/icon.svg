@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 600" role="img" aria-label="Principal S.I.L.">
+  <defs>
+    <linearGradient id="favicon-blue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="favicon-signal" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="700" height="600" rx="128" fill="#080B12"/>
+  <path fill="#F8FAFC" d="M252 70h184c111 0 189 76 189 180S548 430 440 430h-88v88l-64 64V346h151c62 0 103-38 103-96s-41-96-106-96H282z"/>
+  <circle cx="252" cy="70" r="25" fill="#F8FAFC" stroke="#F8FAFC" stroke-width="4"/>
+  <path fill="url(#favicon-blue)" d="M216 286l64-64v245l-64 64z"/>
+  <circle cx="114" cy="167" r="20" fill="none" stroke="#F8FAFC" stroke-width="12"/>
+  <path d="M142 167h116" fill="none" stroke="url(#favicon-signal)" stroke-width="9" stroke-linecap="round"/>
+  <circle cx="152" cy="239" r="20" fill="none" stroke="#2563EB" stroke-width="12"/>
+  <path d="M181 239h68" fill="none" stroke="url(#favicon-signal)" stroke-width="9" stroke-linecap="round"/>
+  <text x="318" y="292" font-family="Montserrat, Arial, sans-serif" font-size="88" font-weight="700" letter-spacing="-3" fill="#F8FAFC">S.I.L</text>
+</svg>
