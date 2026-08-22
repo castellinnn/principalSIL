@@ -79,7 +79,7 @@ export function About() {
                 alt="Marco Castellin"
                 fill
                 sizes="(max-width: 767px) calc(100vw - 2.5rem), (max-width: 1279px) 44vw, 448px"
-                quality={82}
+                quality={75}
                 className="absolute inset-0 h-full w-full scale-[1.12] object-cover object-[center_32%] opacity-90 transition-all duration-700 ease-out group-hover:scale-[1.17] group-hover:opacity-100"
               />
 

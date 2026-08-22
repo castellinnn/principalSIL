@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, type MouseEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -26,6 +26,55 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const progressRef = useRef<HTMLDivElement>(null);
+
+  const handleSectionNavigation = (
+    event: MouseEvent<HTMLAnchorElement>,
+    selector: string
+  ) => {
+    setMobileMenuOpen(false);
+
+    if (!isHome) return;
+
+    event.preventDefault();
+
+    const scrollToTarget = () => {
+      if (selector === "#hero") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        document.querySelector(selector)?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+
+      window.history.replaceState(
+        window.history.state,
+        "",
+        `${window.location.pathname}${window.location.search}${selector}`
+      );
+    };
+
+    // Su mobile aspetta che l'overlay abbia restituito lo scroll alla pagina.
+    window.setTimeout(scrollToTarget, mobileMenuOpen ? 320 : 0);
+  };
+
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMobileMenuOpen(false);
+    };
+
+    window.addEventListener("keydown", closeOnEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [mobileMenuOpen]);
 
   useEffect(() => {
     let animationFrame: number | null = null;
@@ -84,7 +133,7 @@ export function Navbar() {
         <Link
           href={isHome ? "#hero" : "/#hero"}
           aria-label="Torna all'inizio"
-          onClick={() => setMobileMenuOpen(false)}
+          onClick={(event) => handleSectionNavigation(event, "#hero")}
           className="z-50 flex min-h-11 min-w-11 items-center"
         >
           <Image
@@ -105,6 +154,7 @@ export function Navbar() {
               <li key={link.name}>
                 <Link
                   href={isHome ? link.href.slice(1) : link.href}
+                  onClick={(event) => handleSectionNavigation(event, link.selector)}
                   aria-current={activeSection === link.href ? "location" : undefined}
                   className={cn(
                     "relative py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-white",
@@ -124,7 +174,12 @@ export function Navbar() {
           </ul>
           <div className="h-6 w-px bg-border"></div>
           <Button asChild variant={isScrolled ? "default" : "glass"}>
-            <Link href={isHome ? "#contatti" : "/#contatti"}>Richiedi un preventivo</Link>
+            <Link
+              href={isHome ? "#contatti" : "/#contatti"}
+              onClick={(event) => handleSectionNavigation(event, "#contatti")}
+            >
+              Richiedi un preventivo
+            </Link>
           </Button>
         </nav>
 
@@ -142,6 +197,7 @@ export function Navbar() {
         {/* Mobile Menu */}
         <div
           id="mobile-navigation"
+          aria-hidden={!mobileMenuOpen}
           className={cn(
             "fixed inset-0 z-40 flex flex-col items-center overflow-y-auto bg-background/95 px-5 pb-8 pt-24 backdrop-blur-xl transition-all duration-300 ease-in-out sm:justify-center sm:py-20",
             mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
@@ -152,7 +208,7 @@ export function Navbar() {
               <li key={link.name}>
                 <Link
                   href={isHome ? link.href.slice(1) : link.href}
-                  onClick={() => setMobileMenuOpen(false)}
+                  onClick={(event) => handleSectionNavigation(event, link.selector)}
                   aria-current={activeSection === link.href ? "location" : undefined}
                   className={cn(
                     "flex min-h-11 items-center px-4 text-xl font-semibold text-white/70 transition-colors hover:text-white sm:text-2xl",
@@ -164,8 +220,13 @@ export function Navbar() {
               </li>
             ))}
           </ul>
-          <Button asChild size="lg" className="w-full max-w-xs" onClick={() => setMobileMenuOpen(false)}>
-            <Link href={isHome ? "#contatti" : "/#contatti"}>Richiedi un preventivo</Link>
+          <Button asChild size="lg" className="w-full max-w-xs">
+            <Link
+              href={isHome ? "#contatti" : "/#contatti"}
+              onClick={(event) => handleSectionNavigation(event, "#contatti")}
+            >
+              Richiedi un preventivo
+            </Link>
           </Button>
         </div>
       </div>

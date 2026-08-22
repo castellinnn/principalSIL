@@ -11,6 +11,8 @@ const features = [
   { icon: <Search className="h-5 w-5" />, text: "Ottimizzato SEO" },
 ];
 
+const principalSitesUrl = "https://dainty-bavarois-e5ed30.netlify.app/";
+
 export function WebDesign() {
   return (
     <Section id="siti-web" chapter="04" chapterLabel="Progetti digitali" tone="blue" className="relative overflow-hidden">
@@ -57,7 +59,7 @@ export function WebDesign() {
             </Button>
             <Button asChild size="lg" variant="glass" className="group w-full sm:w-[230px]">
               <a
-                href="https://dainty-bavarois-e5ed30.netlify.app/#"
+                href={principalSitesUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center whitespace-nowrap"
@@ -73,36 +75,27 @@ export function WebDesign() {
         <div
           className="relative h-[400px] sm:h-[450px] md:h-[500px] w-full"
         >
-            {/* Mockup principale — cliccabile verso il sito reale */}
-            <a
-              href="https://dainty-bavarois-e5ed30.netlify.app/#"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="absolute right-0 top-0 h-[305px] w-[94%] overflow-hidden rounded-2xl tech-panel shadow-2xl z-20 group transition-colors duration-500 hover:border-cyan-400/30 sm:h-[350px] sm:w-[92%] md:w-[86%]"
+            {/* L'anteprima resta visiva: su touch non genera hover persistenti o aperture involontarie. */}
+            <div
+              className="absolute right-0 top-0 h-[305px] w-[94%] overflow-hidden rounded-2xl tech-panel shadow-2xl z-20 transition-colors duration-500 sm:h-[350px] sm:w-[92%] md:w-[86%]"
             >
               <div className="w-full h-8 bg-black/60 flex items-center px-4 gap-2 border-b border-white/10 absolute top-0 left-0 z-10">
                 <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
                 <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
                 <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
                 <span className="text-[10px] text-white/40 ml-2 font-mono">www.principalsites.it</span>
-                <ExternalLink className="ml-auto h-3 w-3 text-white/30 group-hover:text-[#06B6D4] transition-colors" />
+                <ExternalLink className="ml-auto h-3 w-3 text-white/30" />
               </div>
               <Image
                 src="/images/principal-sites-preview.webp"
                 alt="Principal Sites — Sito web esempio"
                 fill
                 sizes="(max-width: 1023px) 92vw, 43vw"
-                quality={82}
-                className="w-full h-full object-cover object-top opacity-90 group-hover:opacity-100 transition-opacity duration-500"
+                quality={75}
+                className="w-full h-full object-cover object-top opacity-90"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-background/60 via-transparent to-transparent" />
-              {/* Hover overlay */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/30 backdrop-blur-[2px]">
-                <span className="flex items-center gap-2 text-white font-semibold text-sm bg-[#2563EB]/80 px-4 py-2 rounded-full">
-                  Visita il sito <ExternalLink className="h-4 w-4" />
-                </span>
-              </div>
-            </a>
+            </div>
 
           {/* Mockup secondario */}
           <div className="absolute bottom-0 left-0 z-10 h-[215px] w-[72%] overflow-hidden rounded-2xl tech-panel shadow-2xl sm:h-[250px] sm:w-[70%] md:h-[280px] md:w-3/4">
