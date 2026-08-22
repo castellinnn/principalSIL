@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, type CSSProperties } from "react";
 import { Plus, Minus } from "lucide-react";
 import Image from "next/image";
 import { Section } from "@/components/layout/Section";
@@ -43,12 +42,9 @@ export function FAQ() {
         <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[150px]" />
         
         {/* Watermark Logo Nuovo */}
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 0.05, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5 }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[620px] h-[620px] min-w-[500px]"
+        <div
+          data-reveal
+          className="reveal-faq-watermark absolute top-1/2 left-1/2 w-[620px] h-[620px] min-w-[500px]"
         >
           <Image 
             src="/images/logoLungo.svg" 
@@ -57,48 +53,37 @@ export function FAQ() {
             sizes="800px"
             className="object-contain"
           />
-        </motion.div>
+        </div>
       </div>
 
       <div className="max-w-3xl mx-auto relative z-10">
         <div className="text-center mb-12 md:mb-14">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="section-kicker mb-5"
+          <div
+            data-reveal
+            className="reveal-faq-kicker section-kicker mb-5"
           >
             FAQ
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="section-title mb-4"
+          </div>
+          <h2
+            data-reveal
+            className="reveal-faq-heading section-title mb-4"
           >
             Domande chiare. Risposte altrettanto chiare.
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="section-lead"
+          </h2>
+          <p
+            data-reveal
+            className="reveal-faq-lead section-lead"
           >
             Tutto quello che c&apos;è da sapere prima di iniziare.
-          </motion.p>
+          </p>
         </div>
 
         <div className="space-y-3">
           {faqs.map((faq, index) => (
-            <motion.div
+            <div
               key={index}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.08 }}
+              data-reveal
+              style={{ "--reveal-delay": `${index * 0.08}s` } as CSSProperties}
               className="tech-panel rounded-xl overflow-hidden group transition-colors duration-300"
             >
               <button
@@ -112,21 +97,14 @@ export function FAQ() {
                 </span>
               </button>
               
-              <AnimatePresence>
-                {openIndex === index && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: "easeInOut" }}
-                  >
+              <div className={`faq-answer${openIndex === index ? " is-open" : ""}`} aria-hidden={openIndex !== index}>
+                <div>
                     <div className="px-4 pb-5 text-sm leading-relaxed text-muted-foreground sm:px-6 sm:pb-6 sm:text-base">
                       {faq.answer}
                     </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </div>

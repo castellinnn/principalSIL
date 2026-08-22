@@ -1,12 +1,8 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 export function Footer() {
-  const pathname = usePathname();
-  const sectionHref = (hash: string) => pathname === "/" ? hash : `/${hash}`;
+  const sectionHref = (hash: string) => `/${hash}`;
   const currentYear = new Date().getFullYear();
 
   return (

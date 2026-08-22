@@ -544,6 +544,82 @@ body[data-site-loading="true"] {
   letter-spacing: 0.12em;
 }
 
+/* Reveal in viewport: stessi movimenti, senza una libreria di animazione nel bundle. */
+[data-reveal] {
+  opacity: 0;
+  transform: translate3d(var(--reveal-x, 0), var(--reveal-y, 0), 0) scale(var(--reveal-scale, 1));
+  transition:
+    opacity var(--reveal-duration, 0.6s) var(--reveal-ease, ease) var(--reveal-delay, 0s),
+    transform var(--reveal-duration, 0.6s) var(--reveal-ease, ease) var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+
+[data-reveal].is-visible {
+  opacity: var(--reveal-opacity, 1);
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.reveal-about-photo { --reveal-scale: 0.95; --reveal-duration: 0.7s; }
+.reveal-about-copy { --reveal-x: 30px; --reveal-duration: 0.6s; --reveal-delay: 0.2s; }
+.reveal-about-kicker { --reveal-y: 10px; --reveal-duration: 0.4s; --reveal-delay: 0s; }
+.reveal-faq-watermark {
+  --reveal-opacity: 0.05;
+  --reveal-scale: 0.9;
+  --reveal-duration: 1.5s;
+  transform: translate(-50%, -50%) scale(var(--reveal-scale));
+}
+.reveal-faq-watermark.is-visible { transform: translate(-50%, -50%) scale(1); }
+.reveal-faq-kicker { --reveal-scale: 0.9; --reveal-duration: 0.5s; }
+.reveal-faq-heading { --reveal-y: 20px; --reveal-duration: 0.5s; }
+.reveal-faq-lead { --reveal-y: 20px; --reveal-duration: 0.5s; --reveal-delay: 0.1s; }
+#faq .tech-panel[data-reveal] { --reveal-y: 10px; --reveal-duration: 0.4s; }
+
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+.faq-answer > div { min-height: 0; overflow: hidden; }
+.faq-answer.is-open { grid-template-rows: 1fr; opacity: 1; }
+
+.reveal-contact-copy { --reveal-x: -20px; --reveal-duration: 0.6s; }
+.reveal-contact-form { --reveal-y: 20px; --reveal-duration: 0.6s; --reveal-delay: 0.2s; }
+.contact-field-enter { animation: contact-field-enter 0.3s ease both; }
+.contact-advice-enter { animation: contact-advice-enter 0.3s ease both; }
+
+.contact-modal { animation: contact-modal-fade 0.28s ease-out both; }
+.contact-modal-panel { animation: contact-modal-enter 0.28s ease-out both; }
+.contact-modal.is-leaving { animation-direction: reverse; }
+.contact-modal.is-leaving .contact-modal-panel { animation: contact-modal-exit 0.28s ease-out both; }
+
+@keyframes contact-field-enter {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes contact-advice-enter {
+  from { opacity: 0; max-height: 0; }
+  to { opacity: 1; max-height: 8rem; }
+}
+@keyframes contact-modal-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes contact-modal-enter {
+  from { opacity: 0; transform: translateY(22px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes contact-modal-exit {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(12px) scale(0.97); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: var(--reveal-opacity, 1);
+    transform: none;
+    transition: none;
+  }
+  .about-profile-card { transform: none !important; }
+}
+
 /* Hero tecnologica leggera: profondità CSS senza WebGL o librerie 3D. */
 .hero-tech-background {
   position: absolute;

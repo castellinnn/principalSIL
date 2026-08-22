@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import { SiteLoader } from "@/components/layout/SiteLoader";
+import { RevealObserver } from "@/components/layout/RevealObserver";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -81,6 +82,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground overflow-x-hidden selection:bg-primary/30 selection:text-primary-foreground" suppressHydrationWarning>
         <SiteLoader />
+        <RevealObserver />
         {children}
       </body>
     </html>

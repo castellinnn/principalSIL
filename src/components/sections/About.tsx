@@ -1,46 +1,118 @@
 "use client";
 
-import type { PointerEvent } from "react";
-import {
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-} from "framer-motion";
+import { useEffect, useRef, type PointerEvent } from "react";
 import { Section } from "@/components/layout/Section";
 import Image from "next/image";
 
 export function About() {
-  const prefersReducedMotion = useReducedMotion();
-  const rawRotateX = useMotionValue(0);
-  const rawRotateY = useMotionValue(7);
-  const glareX = useMotionValue(50);
-  const glareY = useMotionValue(45);
-  const rawGlareOpacity = useMotionValue(0);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const glareRef = useRef<HTMLDivElement>(null);
+  const frameRef = useRef<number | null>(null);
+  const lastFrameRef = useRef(0);
+  const springRef = useRef({
+    rotateX: 0,
+    rotateY: 7,
+    lift: 0,
+    scale: 1,
+    glare: 0,
+    rotateXVelocity: 0,
+    rotateYVelocity: 0,
+    liftVelocity: 0,
+    scaleVelocity: 0,
+    glareVelocity: 0,
+    targetRotateX: 0,
+    targetRotateY: 7,
+    targetLift: 0,
+    targetScale: 1,
+    targetGlare: 0,
+  });
 
-  const rotateX = useSpring(rawRotateX, { stiffness: 170, damping: 22, mass: 0.7 });
-  const rotateY = useSpring(rawRotateY, { stiffness: 170, damping: 22, mass: 0.7 });
-  const glareOpacity = useSpring(rawGlareOpacity, { stiffness: 130, damping: 24 });
-  const glare = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.72) 0%, rgba(103,232,249,0.34) 11%, rgba(37,99,235,0.16) 24%, transparent 48%)`;
+  const motionDisabled = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  const runSpring = (timestamp: number) => {
+    const card = cardRef.current;
+    const glare = glareRef.current;
+    if (!card || !glare) return;
+
+    const state = springRef.current;
+    const dt = Math.min((timestamp - (lastFrameRef.current || timestamp)) / 1000, 0.032);
+    lastFrameRef.current = timestamp;
+
+    const step = (
+      value: number,
+      velocity: number,
+      target: number,
+      stiffness: number,
+      damping: number,
+      mass = 1
+    ) => {
+      const acceleration = (-stiffness * (value - target) - damping * velocity) / mass;
+      const nextVelocity = velocity + acceleration * dt;
+      return [value + nextVelocity * dt, nextVelocity] as const;
+    };
+
+    [state.rotateX, state.rotateXVelocity] = step(state.rotateX, state.rotateXVelocity, state.targetRotateX, 170, 22, 0.7);
+    [state.rotateY, state.rotateYVelocity] = step(state.rotateY, state.rotateYVelocity, state.targetRotateY, 170, 22, 0.7);
+    [state.lift, state.liftVelocity] = step(state.lift, state.liftVelocity, state.targetLift, 190, 20);
+    [state.scale, state.scaleVelocity] = step(state.scale, state.scaleVelocity, state.targetScale, 190, 20);
+    [state.glare, state.glareVelocity] = step(state.glare, state.glareVelocity, state.targetGlare, 130, 24);
+
+    card.style.transform = `translateY(${state.lift}px) scale(${state.scale}) rotateX(${state.rotateX}deg) rotateY(${state.rotateY}deg)`;
+    glare.style.opacity = String(Math.max(0, Math.min(1, state.glare)));
+
+    const moving =
+      Math.abs(state.rotateX - state.targetRotateX) > 0.01 ||
+      Math.abs(state.rotateY - state.targetRotateY) > 0.01 ||
+      Math.abs(state.lift - state.targetLift) > 0.01 ||
+      Math.abs(state.scale - state.targetScale) > 0.0001 ||
+      Math.abs(state.glare - state.targetGlare) > 0.005;
+
+    frameRef.current = moving ? window.requestAnimationFrame(runSpring) : null;
+  };
+
+  const startSpring = () => {
+    if (frameRef.current === null) {
+      lastFrameRef.current = 0;
+      frameRef.current = window.requestAnimationFrame(runSpring);
+    }
+  };
+
+  useEffect(() => () => {
+    if (frameRef.current !== null) window.cancelAnimationFrame(frameRef.current);
+  }, []);
 
   const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (prefersReducedMotion || event.pointerType === "touch") return;
+    if (motionDisabled() || event.pointerType === "touch") return;
 
     const bounds = event.currentTarget.getBoundingClientRect();
     const horizontal = (event.clientX - bounds.left) / bounds.width;
     const vertical = (event.clientY - bounds.top) / bounds.height;
 
-    rawRotateY.set(7 + (0.5 - horizontal) * 12);
-    rawRotateX.set((0.5 - vertical) * 9);
-    glareX.set(horizontal * 100);
-    glareY.set(vertical * 100);
+    const state = springRef.current;
+    state.targetRotateY = 7 + (0.5 - horizontal) * 12;
+    state.targetRotateX = (0.5 - vertical) * 9;
+    if (glareRef.current) {
+      glareRef.current.style.backgroundImage = `radial-gradient(circle at ${horizontal * 100}% ${vertical * 100}%, rgba(255,255,255,0.72) 0%, rgba(103,232,249,0.34) 11%, rgba(37,99,235,0.16) 24%, transparent 48%)`;
+    }
+    startSpring();
+  };
+
+  const activateCard = () => {
+    if (motionDisabled()) return;
+    springRef.current.targetLift = -7;
+    springRef.current.targetScale = 1.025;
+    springRef.current.targetGlare = 0.9;
+    startSpring();
   };
 
   const resetCard = () => {
-    rawRotateX.set(0);
-    rawRotateY.set(7);
-    rawGlareOpacity.set(0);
+    const state = springRef.current;
+    state.targetRotateX = 0;
+    state.targetRotateY = 7;
+    state.targetLift = 0;
+    state.targetScale = 1;
+    state.targetGlare = 0;
+    startSpring();
   };
 
   return (
@@ -52,27 +124,22 @@ export function About() {
       </div>
 
       <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16 items-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="relative"
+        <div
+          data-reveal
+          className="reveal-about-photo relative"
         >
           <div className="mx-auto w-[94%] max-w-md sm:w-full [perspective:1400px]">
-            <motion.div
-              onPointerEnter={() => !prefersReducedMotion && rawGlareOpacity.set(0.9)}
+            <div
+              ref={cardRef}
+              onPointerEnter={activateCard}
               onPointerMove={handlePointerMove}
               onPointerLeave={resetCard}
-              whileHover={prefersReducedMotion ? undefined : { y: -7, scale: 1.025 }}
-              transition={{ type: "spring", stiffness: 190, damping: 20 }}
               style={{
-                rotateX: prefersReducedMotion ? 0 : rotateX,
-                rotateY: prefersReducedMotion ? 0 : rotateY,
                 transformStyle: "preserve-3d",
                 transformOrigin: "right center",
+                transform: "rotateX(0deg) rotateY(7deg)",
               }}
-              className="group relative aspect-[4/5] w-full cursor-default overflow-hidden rounded-[1.4rem] border border-cyan-300/15 bg-[#0b111c] shadow-[-20px_28px_80px_rgba(0,0,0,0.42),0_0_45px_rgba(6,182,212,0.08)] will-change-transform"
+              className="about-profile-card group relative aspect-[4/5] w-full cursor-default overflow-hidden rounded-[1.4rem] border border-cyan-300/15 bg-[#0b111c] shadow-[-20px_28px_80px_rgba(0,0,0,0.42),0_0_45px_rgba(6,182,212,0.08)] will-change-transform"
             >
               <Image
                 src="/images/foto_profilo.webp"
@@ -94,10 +161,14 @@ export function About() {
                 }}
               />
 
-              <motion.div
+              <div
+                ref={glareRef}
                 aria-hidden="true"
                 className="pointer-events-none absolute inset-0 z-30 mix-blend-screen"
-                style={{ backgroundImage: glare, opacity: glareOpacity }}
+                style={{
+                  backgroundImage: "radial-gradient(circle at 50% 45%, rgba(255,255,255,0.72) 0%, rgba(103,232,249,0.34) 11%, rgba(37,99,235,0.16) 24%, transparent 48%)",
+                  opacity: 0,
+                }}
               />
 
               <div
@@ -116,29 +187,24 @@ export function About() {
 
               <div className="pointer-events-none absolute inset-0 z-40 rounded-[1.4rem] ring-1 ring-inset ring-white/15 transition-all duration-500 group-hover:ring-cyan-200/50 group-hover:shadow-[inset_-12px_0_30px_rgba(34,211,238,0.1)]" />
               <div className="pointer-events-none absolute inset-y-6 right-0 z-40 w-px bg-gradient-to-b from-transparent via-cyan-200/70 to-transparent opacity-65 shadow-[0_0_18px_rgba(103,232,249,0.55)]" />
-            </motion.div>
+            </div>
           </div>
           
           {/* Decorazioni */}
           <div className="absolute -bottom-6 -right-6 w-40 h-40 bg-primary/10 rounded-full blur-3xl -z-10" />
           <div className="absolute -top-6 -left-6 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl -z-10" />
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+        <div
+          data-reveal
+          className="reveal-about-copy"
         >
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.4 }}
-            className="section-kicker mb-5"
+          <div
+            data-reveal
+            className="reveal-about-kicker section-kicker mb-5"
           >
             CHI SONO
-          </motion.div>
+          </div>
 
           <h2 className="section-title mb-6">
             Competenza tecnica, rapporto umano.
@@ -163,7 +229,7 @@ export function About() {
               <p className="text-sm text-muted-foreground">Supporto rapido e chiaro</p>
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </Section>
   );

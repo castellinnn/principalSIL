@@ -21,7 +21,10 @@ export function SiteLoader() {
       finished = true;
 
       try {
-        await document.fonts?.ready;
+        await Promise.race([
+          document.fonts?.ready ?? Promise.resolve(),
+          new Promise<void>((resolve) => window.setTimeout(resolve, 650)),
+        ]);
       } catch {
         // Il sito resta accessibile anche se un font remoto non risponde.
       }
@@ -38,7 +41,7 @@ export function SiteLoader() {
     if (document.readyState === "complete") void finish();
     else window.addEventListener("load", finish, { once: true });
 
-    const safetyTimer = window.setTimeout(() => void finish(), 2400);
+    const safetyTimer = window.setTimeout(() => void finish(), 1600);
 
     return () => {
       cancelled = true;

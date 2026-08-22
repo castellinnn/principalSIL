@@ -1,41 +1,54 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { useForm, useWatch } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { Send, CheckCircle2, AlertCircle, MapPin, Globe, X } from "lucide-react";
 import Link from "next/link";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { contactFormSchema, type ContactFormValues } from "@/lib/contact-schema";
+import type { ContactFormValues } from "@/lib/contact-schema";
+
+type FormErrors = Partial<Record<keyof ContactFormValues, string>>;
+
+const readValue = (formData: FormData, key: keyof ContactFormValues) =>
+  String(formData.get(key) ?? "").trim();
+
+function validateContactForm(data: ContactFormValues): FormErrors {
+  const errors: FormErrors = {};
+  if (data.name.length < 2) errors.name = "Il nome è troppo corto";
+  else if (data.name.length > 80) errors.name = "Il nome è troppo lungo";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) errors.email = "Inserisci un'email valida";
+  else if (data.email.length > 160) errors.email = "L'email è troppo lunga";
+  if (!data.service) errors.service = "Seleziona un servizio";
+  if (!data.modality) errors.modality = "Seleziona una modalità";
+  if (data.message.length < 10) errors.message = "Il messaggio deve contenere almeno 10 caratteri";
+  else if (data.message.length > 3000) errors.message = "Il messaggio non può superare 3000 caratteri";
+
+  const optionalLimits: Array<[keyof ContactFormValues, number]> = [
+    ["surname", 80], ["phone", 30], ["company", 120], ["location", 120], ["website", 200],
+  ];
+  optionalLimits.forEach(([key, max]) => {
+    if ((data[key] ?? "").length > max) errors[key] = "Il testo inserito è troppo lungo";
+  });
+  return errors;
+}
 
 export function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<"success" | "error" | null>(null);
   const [submitErrorMessage, setSubmitErrorMessage] = useState("");
+  const [selectedModality, setSelectedModality] = useState("");
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [modalLeaving, setModalLeaving] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    formState: { errors },
-    reset,
-  } = useForm<ContactFormValues>({
-    resolver: zodResolver(contactFormSchema),
-    defaultValues: {
-      surname: "",
-      phone: "",
-      company: "",
-      service: "",
-      modality: "",
-      location: "",
-      website: "",
-    },
-  });
-
-  const selectedModality = useWatch({ control, name: "modality" });
+  const closeModal = useCallback(() => {
+    if (!submitStatus || modalLeaving) return;
+    setModalLeaving(true);
+    window.setTimeout(() => {
+      setSubmitStatus(null);
+      setModalLeaving(false);
+    }, 280);
+  }, [modalLeaving, submitStatus]);
 
   useEffect(() => {
     if (!submitStatus) return;
@@ -44,7 +57,7 @@ export function Contact() {
     document.body.style.overflow = "hidden";
 
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setSubmitStatus(null);
+      if (event.key === "Escape") closeModal();
     };
 
     window.addEventListener("keydown", closeOnEscape);
@@ -53,9 +66,32 @@ export function Contact() {
       document.body.style.overflow = previousOverflow;
       window.removeEventListener("keydown", closeOnEscape);
     };
-  }, [submitStatus]);
+  }, [closeModal, submitStatus]);
 
-  const onSubmit = async (data: ContactFormValues) => {
+  const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const data: ContactFormValues = {
+      name: readValue(formData, "name"),
+      surname: readValue(formData, "surname"),
+      email: readValue(formData, "email"),
+      phone: readValue(formData, "phone"),
+      company: readValue(formData, "company"),
+      service: readValue(formData, "service"),
+      modality: readValue(formData, "modality"),
+      location: readValue(formData, "location"),
+      message: readValue(formData, "message"),
+      website: readValue(formData, "website"),
+    };
+    const validationErrors = validateContactForm(data);
+    setErrors(validationErrors);
+    if (Object.keys(validationErrors).length) {
+      const firstInvalid = form.querySelector<HTMLElement>(`[name="${Object.keys(validationErrors)[0]}"]`);
+      firstInvalid?.focus();
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus(null);
     setSubmitErrorMessage("");
@@ -75,7 +111,9 @@ export function Contact() {
       if (!response.ok) throw new Error(result?.message || "Invio non riuscito");
 
       setSubmitStatus("success");
-      reset();
+      form.reset();
+      setSelectedModality("");
+      setErrors({});
     } catch (error) {
       const timedOut = error instanceof DOMException && error.name === "AbortError";
       setSubmitErrorMessage(
@@ -101,12 +139,9 @@ export function Contact() {
       <div className="max-w-6xl mx-auto relative z-10">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-5 lg:gap-16">
           
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="lg:col-span-2"
+          <div
+            data-reveal
+            className="reveal-contact-copy lg:col-span-2"
           >
             <div className="section-kicker mb-5">PARLIAMONE</div>
             <h2 className="section-title mb-6">
@@ -173,19 +208,25 @@ export function Contact() {
                 </Button>
               </div>
             </div>
-          </motion.div>
+          </div>
 
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="lg:col-span-3"
+          <div
+            data-reveal
+            className="reveal-contact-form lg:col-span-3"
           >
-            <form onSubmit={handleSubmit(onSubmit)} noValidate className="tech-panel p-5 sm:p-6 md:p-8 rounded-2xl shadow-2xl relative z-10">
+            <form
+              onSubmit={onSubmit}
+              onInput={(event) => {
+                const field = (event.target as HTMLInputElement).name as keyof ContactFormValues;
+                if (!field || !errors[field]) return;
+                setErrors((current) => ({ ...current, [field]: undefined }));
+              }}
+              noValidate
+              className="tech-panel p-5 sm:p-6 md:p-8 rounded-2xl shadow-2xl relative z-10"
+            >
               <div className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
                 <label htmlFor="website">Non compilare questo campo</label>
-                <input id="website" type="text" tabIndex={-1} autoComplete="off" {...register("website")} />
+                <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
               </div>
 
               <p className="mb-6 text-xs text-white/45"><span className="text-cyan-300">*</span> Campi obbligatori</p>
@@ -194,29 +235,29 @@ export function Contact() {
                   <label htmlFor="name" className="block text-sm font-medium text-white/80 mb-2">Nome <span className="text-cyan-300">*</span></label>
                   <input
                     id="name"
+                    name="name"
                     type="text"
                     required
                     autoComplete="given-name"
                     aria-invalid={Boolean(errors.name)}
                     aria-describedby={errors.name ? "name-error" : undefined}
-                    {...register("name")}
                     className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all"
                     placeholder="Il tuo nome"
                   />
-                  {errors.name && <p id="name-error" className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.name.message}</p>}
+                  {errors.name && <p id="name-error" className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.name}</p>}
                 </div>
 
                 <div>
                   <label htmlFor="surname" className="block text-sm font-medium text-white/80 mb-2">Cognome <span className="text-white/35">(opzionale)</span></label>
                   <input
                     id="surname"
+                    name="surname"
                     type="text"
                     autoComplete="family-name"
-                    {...register("surname")}
                     className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all"
                     placeholder="Il tuo cognome"
                   />
-                  {errors.surname && <p className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.surname.message}</p>}
+                  {errors.surname && <p className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.surname}</p>}
                 </div>
               </div>
 
@@ -225,29 +266,29 @@ export function Contact() {
                   <label htmlFor="email" className="block text-sm font-medium text-white/80 mb-2">Email <span className="text-cyan-300">*</span></label>
                   <input
                     id="email"
+                    name="email"
                     type="email"
                     required
                     autoComplete="email"
                     aria-invalid={Boolean(errors.email)}
                     aria-describedby={errors.email ? "email-error" : undefined}
-                    {...register("email")}
                     className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all"
                     placeholder="La tua email"
                   />
-                  {errors.email && <p id="email-error" className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.email.message}</p>}
+                  {errors.email && <p id="email-error" className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.email}</p>}
                 </div>
 
                 <div>
                   <label htmlFor="phone" className="block text-sm font-medium text-white/80 mb-2">Telefono <span className="text-white/35">(opzionale)</span></label>
                   <input
                     id="phone"
+                    name="phone"
                     type="tel"
                     autoComplete="tel"
-                    {...register("phone")}
                     className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all"
                     placeholder="Il tuo numero"
                   />
-                  {errors.phone && <p className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.phone.message}</p>}
+                  {errors.phone && <p className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.phone}</p>}
                 </div>
               </div>
 
@@ -256,23 +297,23 @@ export function Contact() {
                   <label htmlFor="company" className="block text-sm font-medium text-white/80 mb-2">Azienda <span className="text-white/35">(opzionale)</span></label>
                   <input
                     id="company"
+                    name="company"
                     type="text"
                     autoComplete="organization"
-                    {...register("company")}
                     className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all"
                     placeholder="Nome azienda"
                   />
-                  {errors.company && <p className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.company.message}</p>}
+                  {errors.company && <p className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.company}</p>}
                 </div>
 
                 <div>
                   <label htmlFor="service" className="block text-sm font-medium text-white/80 mb-2">Di cosa hai bisogno? <span className="text-cyan-300">*</span></label>
                   <select
                     id="service"
+                    name="service"
                     required
                     aria-invalid={Boolean(errors.service)}
                     aria-describedby={errors.service ? "service-error" : undefined}
-                    {...register("service")}
                     className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all appearance-none"
                   >
                     <option value="" disabled className="bg-[#111827] text-white">Seleziona un servizio...</option>
@@ -285,7 +326,7 @@ export function Contact() {
                     <option value="Dispositivi Smart" className="bg-[#111827] text-white">Dispositivi Smart</option>
                     <option value="Altro" className="bg-[#111827] text-white">Altro</option>
                   </select>
-                  {errors.service && <p id="service-error" className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.service.message}</p>}
+                  {errors.service && <p id="service-error" className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.service}</p>}
                 </div>
               </div>
 
@@ -294,10 +335,11 @@ export function Contact() {
                   <label htmlFor="modality" className="block text-sm font-medium text-white/80 mb-2">Modalità preferita <span className="text-cyan-300">*</span></label>
                   <select
                     id="modality"
+                    name="modality"
                     required
                     aria-invalid={Boolean(errors.modality)}
                     aria-describedby={errors.modality ? "modality-error" : undefined}
-                    {...register("modality")}
+                    onChange={(event) => setSelectedModality(event.target.value)}
                     className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all appearance-none"
                   >
                     <option value="" disabled className="bg-[#111827] text-white">Seleziona una modalità...</option>
@@ -305,55 +347,49 @@ export function Contact() {
                     <option value="Da remoto" className="bg-[#111827] text-white">Da remoto (Tutta Italia)</option>
                     <option value="Non so, consigliami tu" className="bg-[#111827] text-white">Non so, consigliami tu</option>
                   </select>
-                  {errors.modality && <p id="modality-error" className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.modality.message}</p>}
+                  {errors.modality && <p id="modality-error" className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.modality}</p>}
                 </div>
                 
                 <div>
                   {selectedModality !== "Da remoto" && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
+                    <div className="contact-field-enter">
                       <label htmlFor="location" className="block text-sm font-medium text-white/80 mb-2">
                         Comune / Zona {selectedModality === "In presenza" ? "" : "(opzionale)"}
                       </label>
                       <input
                         id="location"
+                        name="location"
                         type="text"
-                        {...register("location")}
                         className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all"
                         placeholder="Es: Biella, Cossato..."
                       />
-                    </motion.div>
+                    </div>
                   )}
                 </div>
               </div>
 
               {selectedModality === "Non so, consigliami tu" && (
-                <motion.div 
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  className="mb-6 p-4 rounded-lg bg-primary/10 border border-primary/20 text-cyan-400 text-xs leading-relaxed"
+                <div
+                  className="contact-advice-enter mb-6 overflow-hidden rounded-lg border border-primary/20 bg-primary/10 p-4 text-xs leading-relaxed text-cyan-400"
                 >
                   Nessun problema. Descrivimi ciò di cui hai bisogno nel messaggio e valuterò la soluzione più adatta.
-                </motion.div>
+                </div>
               )}
 
               <div className="mb-6">
                 <label htmlFor="message" className="block text-sm font-medium text-white/80 mb-2">Descrizione del problema/progetto <span className="text-cyan-300">*</span></label>
                 <textarea
                   id="message"
+                  name="message"
                   required
                   aria-invalid={Boolean(errors.message)}
                   aria-describedby={errors.message ? "message-error" : undefined}
                   maxLength={3000}
-                  {...register("message")}
                   rows={4}
                   className="w-full bg-black/40 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all resize-none"
                   placeholder="Descrivimi cosa vorresti realizzare o quale problema stai cercando di risolvere..."
                 />
-                {errors.message && <p id="message-error" className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.message.message}</p>}
+                {errors.message && <p id="message-error" className="mt-2 text-sm text-red-400 flex items-center"><AlertCircle className="h-3 w-3 mr-1"/>{errors.message}</p>}
               </div>
 
               <p className="mb-8 rounded-xl border border-white/8 bg-black/20 px-4 py-3 text-xs leading-relaxed text-muted-foreground">
@@ -384,32 +420,24 @@ export function Contact() {
                 )}
               </Button>
             </form>
-          </motion.div>
+          </div>
         </div>
       </div>
 
-      <AnimatePresence>
-        {submitStatus && (
-          <motion.div
-            className="fixed inset-0 z-[100] flex items-center justify-center px-5 py-8"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onMouseDown={() => setSubmitStatus(null)}
+      {submitStatus && (
+          <div
+            className={cn("contact-modal fixed inset-0 z-[100] flex items-center justify-center px-5 py-8", modalLeaving && "is-leaving")}
+            onMouseDown={closeModal}
           >
             <div className="absolute inset-0 bg-[#03050a]/85 backdrop-blur-md" />
 
-            <motion.div
+            <div
               role="dialog"
               aria-modal="true"
               aria-labelledby="form-result-title"
               aria-describedby="form-result-description"
-              initial={{ opacity: 0, y: 22, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 12, scale: 0.97 }}
-              transition={{ duration: 0.28, ease: "easeOut" }}
               onMouseDown={(event) => event.stopPropagation()}
-              className="tech-panel relative max-h-[calc(100svh-2rem)] w-full max-w-md overflow-y-auto overflow-x-hidden rounded-3xl border border-white/10 p-6 text-center shadow-[0_30px_100px_rgba(0,0,0,0.65)] sm:p-7 md:p-9"
+              className="contact-modal-panel tech-panel relative max-h-[calc(100svh-2rem)] w-full max-w-md overflow-y-auto overflow-x-hidden rounded-3xl border border-white/10 p-6 text-center shadow-[0_30px_100px_rgba(0,0,0,0.65)] sm:p-7 md:p-9"
             >
               <div
                 className="pointer-events-none absolute inset-0 opacity-30"
@@ -430,7 +458,7 @@ export function Contact() {
                 type="button"
                 autoFocus
                 aria-label="Chiudi messaggio"
-                onClick={() => setSubmitStatus(null)}
+                onClick={closeModal}
                 className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60 transition-colors hover:bg-white/10 hover:text-white focus:outline-none focus:ring-2 focus:ring-primary/60"
               >
                 <X className="h-4 w-4" />
@@ -472,12 +500,12 @@ export function Contact() {
                 </p>
 
                 {submitStatus === "success" ? (
-                  <Button type="button" size="lg" className="w-full" onClick={() => setSubmitStatus(null)}>
+                  <Button type="button" size="lg" className="w-full" onClick={closeModal}>
                     Perfetto
                   </Button>
                 ) : (
                   <div className="grid gap-3 sm:grid-cols-2">
-                    <Button type="button" size="lg" className="w-full" onClick={() => setSubmitStatus(null)}>
+                    <Button type="button" size="lg" className="w-full" onClick={closeModal}>
                       Torna al form
                     </Button>
                     <a
@@ -491,10 +519,9 @@ export function Contact() {
                   </div>
                 )}
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </div>
+          </div>
+      )}
     </Section>
   );
 }
