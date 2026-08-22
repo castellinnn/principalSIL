@@ -76,6 +76,11 @@ export default function RootLayout({
     <html lang="it" className={`${montserrat.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
         <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var n=performance.getEntriesByType("navigation")[0];if(sessionStorage.getItem("principal-sil-ready")==="1"||n&&n.type==="back_forward")document.documentElement.dataset.skipSiteLoader="true"}catch(e){}`,
+          }}
+        />
+        <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />

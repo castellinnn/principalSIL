@@ -31,11 +31,16 @@ export function Navbar() {
     event: MouseEvent<HTMLAnchorElement>,
     selector: string
   ) => {
+    const wasMobileMenuOpen = mobileMenuOpen;
     setMobileMenuOpen(false);
 
     if (!isHome) return;
 
     event.preventDefault();
+
+    // Restituisce subito lo scroll alla pagina: menu e spostamento possono
+    // completare insieme, senza una pausa blu prima della nuova sezione.
+    if (wasMobileMenuOpen) document.body.style.overflow = "";
 
     const scrollToTarget = () => {
       if (selector === "#hero") {
@@ -54,8 +59,7 @@ export function Navbar() {
       );
     };
 
-    // Su mobile aspetta che l'overlay abbia restituito lo scroll alla pagina.
-    window.setTimeout(scrollToTarget, mobileMenuOpen ? 320 : 0);
+    scrollToTarget();
   };
 
   useEffect(() => {
@@ -78,11 +82,12 @@ export function Navbar() {
 
   useEffect(() => {
     let animationFrame: number | null = null;
+    let lastSectionUpdate = -Infinity;
     const sections = navLinks
       .map((link) => ({ ...link, element: document.querySelector(link.selector) }))
       .filter((item) => item.element);
 
-    const updateScrollState = () => {
+    const updateScrollState = (timestamp = performance.now()) => {
       animationFrame = null;
       setIsScrolled(window.scrollY > 20);
 
@@ -92,16 +97,19 @@ export function Navbar() {
         progressRef.current.style.transform = `scaleX(${progress})`;
       }
 
-      const threshold = window.innerHeight * 0.4;
-      let currentSection = "";
+      if (timestamp - lastSectionUpdate >= 100) {
+        lastSectionUpdate = timestamp;
+        const threshold = window.innerHeight * 0.4;
+        let currentSection = "";
 
-      sections.forEach((section) => {
-        if (section.element && section.element.getBoundingClientRect().top <= threshold) {
-          currentSection = section.href;
-        }
-      });
+        sections.forEach((section) => {
+          if (section.element && section.element.getBoundingClientRect().top <= threshold) {
+            currentSection = section.href;
+          }
+        });
 
-      setActiveSection(currentSection);
+        setActiveSection(currentSection);
+      }
     };
 
     const handleScroll = () => {

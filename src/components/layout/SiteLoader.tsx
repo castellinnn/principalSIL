@@ -8,13 +8,41 @@ export function SiteLoader() {
   const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
+    const root = document.documentElement;
+    const body = document.body;
+
+    if (root.dataset.skipSiteLoader === "true") {
+      body.dataset.siteLoading = "false";
+      const frame = window.requestAnimationFrame(() => setVisible(false));
+      return () => window.cancelAnimationFrame(frame);
+    }
+
     const startedAt = performance.now();
     let hideTimer: number | undefined;
     let exitTimer: number | undefined;
     let cancelled = false;
     let finished = false;
 
-    document.body.dataset.siteLoading = "true";
+    body.dataset.siteLoading = "true";
+
+    const rememberReady = () => {
+      try {
+        window.sessionStorage.setItem("principal-sil-ready", "1");
+      } catch {
+        // Il loader continua a funzionare anche con storage disabilitato.
+      }
+    };
+
+    const restoreImmediately = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      root.dataset.skipSiteLoader = "true";
+      rememberReady();
+      body.dataset.siteLoading = "false";
+      setLeaving(true);
+      setVisible(false);
+    };
+
+    window.addEventListener("pageshow", restoreImmediately);
 
     const finish = async () => {
       if (cancelled || finished) return;
@@ -32,8 +60,9 @@ export function SiteLoader() {
       const minimumDisplay = Math.max(0, 420 - (performance.now() - startedAt));
       hideTimer = window.setTimeout(() => {
         if (cancelled) return;
+        rememberReady();
         setLeaving(true);
-        document.body.dataset.siteLoading = "false";
+        body.dataset.siteLoading = "false";
         exitTimer = window.setTimeout(() => !cancelled && setVisible(false), 420);
       }, minimumDisplay);
     };
@@ -46,10 +75,11 @@ export function SiteLoader() {
     return () => {
       cancelled = true;
       window.removeEventListener("load", finish);
+      window.removeEventListener("pageshow", restoreImmediately);
       if (hideTimer) window.clearTimeout(hideTimer);
       window.clearTimeout(safetyTimer);
       if (exitTimer) window.clearTimeout(exitTimer);
-      document.body.dataset.siteLoading = "false";
+      body.dataset.siteLoading = "false";
     };
   }, []);
 

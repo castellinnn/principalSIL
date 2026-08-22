@@ -60,8 +60,6 @@ export function WebDesign() {
             <Button asChild size="lg" variant="glass" className="group w-full sm:w-[230px]">
               <a
                 href={principalSitesUrl}
-                target="_blank"
-                rel="noopener noreferrer"
                 className="flex items-center justify-center whitespace-nowrap"
               >
                 Visita Principal Sites

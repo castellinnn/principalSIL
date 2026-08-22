@@ -428,6 +428,10 @@ body[data-site-loading="true"] {
   overflow: hidden;
 }
 
+html[data-skip-site-loader="true"] .site-loader {
+  display: none;
+}
+
 .site-loader {
   position: fixed;
   z-index: 9999;
