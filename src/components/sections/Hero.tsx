@@ -18,14 +18,19 @@ export function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-60" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-cyan-300" />
             </span>
-            <span className="text-[11px] md:text-xs font-semibold tracking-[0.18em] uppercase text-cyan-100/80">
-              Principal S.I.L.
+            <span className="flex flex-col items-start">
+              <span className="text-[11px] md:text-xs font-semibold tracking-[0.18em] uppercase text-cyan-100/80">
+                Principal S.I.L.
+              </span>
+              <span className="mt-0.5 text-[7px] font-medium uppercase tracking-[0.13em] text-cyan-100/45 md:text-[8px]">
+                System Integration Link
+              </span>
             </span>
           </div>
 
           <h1 className="hero-reveal hero-reveal-2 text-[clamp(2.35rem,10.8vw,4.55rem)] font-extrabold tracking-[-0.05em] leading-[0.98] text-white mb-4 sm:mb-5">
-            <span className="text-gradient-primary">Synk your world.</span>
-            <span className="block mt-2 text-white">Tecnologia semplice.</span>
+            <span className="text-gradient-primary">Synk your world</span>
+            <span className="block mt-2 text-white">Tecnologia semplice</span>
           </h1>
 
           <p className="hero-reveal hero-reveal-3 text-sm md:text-base text-white/60 max-w-xl mx-auto lg:mx-0 leading-relaxed mb-6 sm:mb-7">

@@ -2,7 +2,6 @@
 
 import { useState, type CSSProperties } from "react";
 import { Plus, Minus } from "lucide-react";
-import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 
 const faqs = [
@@ -31,29 +30,11 @@ const faqs = [
 export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
-  const toggleOpen = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
   return (
     <Section id="faq" chapter="07" chapterLabel="Prima di iniziare" tone="slate" className="relative overflow-hidden">
       {/* Sfondo dinamico */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden">
         <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[150px]" />
-        
-        {/* Watermark Logo Nuovo */}
-        <div
-          data-reveal
-          className="reveal-faq-watermark absolute top-1/2 left-1/2 w-[620px] h-[620px] min-w-[500px]"
-        >
-          <Image 
-            src="/images/logoLungo.svg" 
-            alt="" 
-            fill
-            sizes="800px"
-            className="object-contain"
-          />
-        </div>
       </div>
 
       <div className="max-w-3xl mx-auto relative z-10">
@@ -81,13 +62,13 @@ export function FAQ() {
         <div className="space-y-3">
           {faqs.map((faq, index) => (
             <div
-              key={index}
+              key={faq.question}
               data-reveal
               style={{ "--reveal-delay": `${index * 0.08}s` } as CSSProperties}
               className="tech-panel rounded-xl overflow-hidden group transition-colors duration-300"
             >
               <button
-                onClick={() => toggleOpen(index)}
+                onClick={() => setOpenIndex((current) => current === index ? null : index)}
                 className="w-full flex items-center justify-between p-4 sm:p-5 md:p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
                 aria-expanded={openIndex === index}
               >

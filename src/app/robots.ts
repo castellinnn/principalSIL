@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
-
-const siteUrl = "https://principalsil.it";
+import { SITE_CONFIG } from "@/lib/site-config";
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -9,7 +8,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: "/api/",
     },
-    sitemap: `${siteUrl}/sitemap.xml`,
-    host: siteUrl,
+    sitemap: `${SITE_CONFIG.url}/sitemap.xml`,
+    host: SITE_CONFIG.url,
   };
 }

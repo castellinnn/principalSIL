@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import { Footer } from "@/components/layout/Footer";
+import { Navbar } from "@/components/layout/Navbar";
 import { SiteLoader } from "@/components/layout/SiteLoader";
-import { RevealObserver } from "@/components/layout/RevealObserver";
+import { SITE_CONFIG } from "@/lib/site-config";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -11,17 +13,20 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://principalsil.it"),
+  metadataBase: new URL(SITE_CONFIG.url),
   title: "Principal S.I.L. | Assistenza Informatica Biella e Servizi da Remoto",
-  description: "Assistenza informatica a domicilio a Biella e provincia. Servizi digitali, supporto software e realizzazione siti web da remoto in tutta Italia.",
+  description: SITE_CONFIG.description,
   alternates: {
     canonical: "/",
+  },
+  icons: {
+    icon: SITE_CONFIG.logos.short.src,
   },
   openGraph: {
     title: "Principal S.I.L. | Synk your world",
     description: "Assistenza informatica a Biella e servizi digitali da remoto in tutta Italia.",
     url: "/",
-    siteName: "Principal S.I.L.",
+    siteName: SITE_CONFIG.name,
     locale: "it_IT",
     type: "website",
     images: [
@@ -49,9 +54,9 @@ export default function RootLayout({
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    "name": "Principal S.I.L.",
-    "url": "https://principalsil.it",
-    "telephone": "+393452294306",
+    "name": SITE_CONFIG.name,
+    "url": SITE_CONFIG.url,
+    "telephone": SITE_CONFIG.contact.phoneInternational,
     "priceRange": "$$",
     "address": {
       "@type": "PostalAddress",
@@ -69,7 +74,7 @@ export default function RootLayout({
         "name": "Italia"
       }
     ],
-    "description": "Assistenza informatica a domicilio a Biella e provincia. Servizi digitali, supporto software e realizzazione siti web da remoto in tutta Italia. — Principal S.I.L., Synk your world."
+    "description": `${SITE_CONFIG.description} — ${SITE_CONFIG.name}, Synk your world.`
   };
 
   return (
@@ -87,8 +92,9 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-background text-foreground overflow-x-hidden selection:bg-primary/30 selection:text-primary-foreground" suppressHydrationWarning>
         <SiteLoader />
-        <RevealObserver />
+        <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );

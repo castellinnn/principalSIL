@@ -1,8 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { ArrowLeft, ShieldCheck } from "lucide-react";
-import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
 
 type LegalPageProps = {
   eyebrow: string;
@@ -14,9 +12,7 @@ type LegalPageProps = {
 
 export function LegalPage({ eyebrow, title, description, version, children }: LegalPageProps) {
   return (
-    <>
-      <Navbar />
-      <main className="relative min-h-screen overflow-hidden bg-[#080B12] pt-28 sm:pt-32">
+    <main className="relative min-h-screen overflow-hidden bg-[#080B12] pt-28 sm:pt-32">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_82%_8%,rgba(6,182,212,0.10),transparent_30rem),radial-gradient(circle_at_10%_32%,rgba(37,99,235,0.08),transparent_28rem)]" />
         <div className="pointer-events-none absolute inset-0 opacity-20 [background-image:linear-gradient(rgba(34,211,238,.055)_1px,transparent_1px),linear-gradient(90deg,rgba(34,211,238,.055)_1px,transparent_1px)] [background-size:72px_72px] [mask-image:linear-gradient(to_bottom,black,transparent_80%)]" />
 
@@ -46,8 +42,6 @@ export function LegalPage({ eyebrow, title, description, version, children }: Le
 
           <article className="legal-copy mt-8">{children}</article>
         </div>
-      </main>
-      <Footer />
-    </>
+    </main>
   );
 }

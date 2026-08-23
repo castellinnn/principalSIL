@@ -3,6 +3,7 @@
 import { useEffect, useRef, type PointerEvent } from "react";
 import { Section } from "@/components/layout/Section";
 import Image from "next/image";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 
 export function About() {
   const cardRef = useRef<HTMLDivElement>(null);
@@ -172,15 +173,12 @@ export function About() {
               />
 
               <div
-                className="pointer-events-none absolute bottom-5 right-5 z-40 flex h-[4.25rem] w-[4.75rem] items-center justify-center rounded-2xl border border-cyan-200/25 bg-[#080B12]/80 shadow-[0_12px_35px_rgba(0,0,0,0.42),0_0_24px_rgba(6,182,212,0.14)] backdrop-blur-md transition-all duration-500 group-hover:border-cyan-200/50 group-hover:shadow-[0_14px_38px_rgba(0,0,0,0.46),0_0_32px_rgba(6,182,212,0.24)]"
+                className="pointer-events-none absolute bottom-5 right-5 z-40 flex h-[4.25rem] w-[4.75rem] items-center justify-center rounded-2xl border border-blue-100/80 bg-gradient-to-br from-white via-slate-50 to-blue-100 shadow-[0_12px_35px_rgba(0,0,0,0.34),0_0_24px_rgba(37,99,235,0.2)] transition-all duration-500 group-hover:border-blue-200 group-hover:shadow-[0_14px_38px_rgba(0,0,0,0.38),0_0_32px_rgba(37,99,235,0.3)]"
                 style={{ transform: "translateZ(48px)" }}
                 aria-hidden="true"
               >
-                <Image
-                  src="/images/logoCorto.svg"
-                  alt=""
-                  width={70}
-                  height={60}
+                <BrandLogo
+                  decorative
                   className="h-12 w-auto object-contain"
                 />
               </div>

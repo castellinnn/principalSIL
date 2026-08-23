@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/layout/LegalPage";
+import { SITE_CONFIG } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Privacy Policy | Principal S.I.L.",
@@ -19,8 +20,8 @@ export default function PrivacyPolicyPage() {
         <h2>1. Titolare del trattamento</h2>
         <p><strong>Marco Castellin, operante con denominazione Principal S.I.L.</strong></p>
         <ul>
-          <li>Email: <a href="mailto:castellin.marco@gmail.com">castellin.marco@gmail.com</a></li>
-          <li>Telefono: <a href="tel:+393452294306">345 229 4306</a></li>
+          <li>Email: <a href={SITE_CONFIG.contact.emailHref}>{SITE_CONFIG.contact.email}</a></li>
+          <li>Telefono: <a href={SITE_CONFIG.contact.phoneHref}>{SITE_CONFIG.contact.phone}</a></li>
         </ul>
       </section>
 
@@ -59,7 +60,7 @@ export default function PrivacyPolicyPage() {
       <section>
         <h2>7. Diritti dell’interessato</h2>
         <p>Nei casi previsti dal GDPR puoi chiedere accesso, rettifica, cancellazione, limitazione, portabilità dei dati e opposizione al trattamento. Puoi anche proporre reclamo al Garante per la protezione dei dati personali.</p>
-        <p>Per esercitare i diritti scrivi a <a href="mailto:castellin.marco@gmail.com">castellin.marco@gmail.com</a>. Il titolare può chiedere informazioni necessarie a verificare l’identità del richiedente.</p>
+        <p>Per esercitare i diritti scrivi a <a href={SITE_CONFIG.contact.emailHref}>{SITE_CONFIG.contact.email}</a>. Il titolare può chiedere informazioni necessarie a verificare l’identità del richiedente.</p>
       </section>
 
       <section>

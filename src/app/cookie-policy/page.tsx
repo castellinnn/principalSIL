@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LegalPage } from "@/components/layout/LegalPage";
+import { SITE_CONFIG } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Cookie Policy | Principal S.I.L.",
@@ -54,7 +55,7 @@ export default function CookiePolicyPage() {
 
       <section>
         <h2>6. Contatti e aggiornamenti</h2>
-        <p>Per domande scrivi a <a href="mailto:castellin.marco@gmail.com">castellin.marco@gmail.com</a>. Per informazioni più ampie sul trattamento dei dati consulta la <Link href="/privacy-policy">Privacy Policy</Link>.</p>
+        <p>Per domande scrivi a <a href={SITE_CONFIG.contact.emailHref}>{SITE_CONFIG.contact.email}</a>. Per informazioni più ampie sul trattamento dei dati consulta la <Link href="/privacy-policy">Privacy Policy</Link>.</p>
       </section>
     </LegalPage>
   );

@@ -1,23 +1,22 @@
 import type { MetadataRoute } from "next";
-
-const siteUrl = "https://principalsil.it";
+import { SITE_CONFIG } from "@/lib/site-config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: siteUrl,
+      url: SITE_CONFIG.url,
       lastModified: new Date("2026-08-22"),
       changeFrequency: "monthly",
       priority: 1,
     },
     {
-      url: `${siteUrl}/privacy-policy`,
+      url: `${SITE_CONFIG.url}/privacy-policy`,
       lastModified: new Date("2026-08-22"),
       changeFrequency: "yearly",
       priority: 0.2,
     },
     {
-      url: `${siteUrl}/cookie-policy`,
+      url: `${SITE_CONFIG.url}/cookie-policy`,
       lastModified: new Date("2026-08-22"),
       changeFrequency: "yearly",
       priority: 0.2,

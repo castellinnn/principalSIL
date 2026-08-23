@@ -13,7 +13,7 @@ const services = [
   {
     icon: <Wifi className="h-6 w-6" />,
     title: "Wi-Fi & Reti",
-    description: "Copertura affidabile in ogni stanza, dispositivi connessi e una rete configurata come si deve.",
+    description: "Router, access point e dispositivi collegati alla rete esistente per una copertura Wi-Fi affidabile in ogni stanza.",
     gradient: "from-sky-500/10 via-transparent to-transparent",
     modality: "Presenza",
   },
@@ -27,7 +27,7 @@ const services = [
   {
     icon: <Smartphone className="h-6 w-6" />,
     title: "Dispositivi Smart",
-    description: "Smart TV, smartphone, tablet e domotica configurati per funzionare insieme, senza stress.",
+    description: "Smart TV, smartphone, tablet e dispositivi domotici plug-and-play configurati per funzionare insieme, senza stress.",
     gradient: "from-violet-500/10 via-transparent to-transparent",
     modality: "Presenza",
   },
@@ -41,7 +41,7 @@ const services = [
   {
     icon: <Cpu className="h-6 w-6" />,
     title: "Soluzioni Tecnologiche",
-    description: "Telecamere IP, dispositivi e strumenti digitali integrati in un sistema semplice da gestire.",
+    description: "Videocamere IP e accessori plug-and-play configurati e collegati a reti e prese già esistenti.",
     gradient: "from-teal-500/10 via-transparent to-transparent",
     modality: "Presenza + Remoto",
   },
@@ -78,9 +78,9 @@ export function Services() {
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {services.map((service, index) => (
+          {services.map((service) => (
             <div
-              key={index}
+              key={service.title}
               className="group relative tech-panel rounded-2xl p-5 sm:p-6 md:p-7 transition-all duration-500 hover:-translate-y-1 overflow-hidden"
             >
               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-cyan-400/45 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />

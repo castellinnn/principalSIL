@@ -1,11 +1,40 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 
 export function SiteLoader() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(true);
   const [leaving, setLeaving] = useState(false);
+
+  useEffect(() => {
+    const elements = Array.from(document.querySelectorAll<HTMLElement>("[data-reveal]"));
+    if (!elements.length) return;
+
+    if (
+      !("IntersectionObserver" in window) ||
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      elements.forEach((element) => element.classList.add("is-visible"));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        });
+      },
+      { threshold: 0.01 }
+    );
+
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
+  }, [pathname]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -51,7 +80,7 @@ export function SiteLoader() {
       try {
         await Promise.race([
           document.fonts?.ready ?? Promise.resolve(),
-          new Promise<void>((resolve) => window.setTimeout(resolve, 650)),
+          new Promise<void>((resolve) => window.setTimeout(resolve, 250)),
         ]);
       } catch {
         // Il sito resta accessibile anche se un font remoto non risponde.
@@ -67,14 +96,21 @@ export function SiteLoader() {
       }, minimumDisplay);
     };
 
-    if (document.readyState === "complete") void finish();
-    else window.addEventListener("load", finish, { once: true });
+    const startWhenPainted = () => {
+      window.requestAnimationFrame(() => window.requestAnimationFrame(() => void finish()));
+    };
 
-    const safetyTimer = window.setTimeout(() => void finish(), 1600);
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", startWhenPainted, { once: true });
+    } else {
+      startWhenPainted();
+    }
+
+    const safetyTimer = window.setTimeout(() => void finish(), 900);
 
     return () => {
       cancelled = true;
-      window.removeEventListener("load", finish);
+      document.removeEventListener("DOMContentLoaded", startWhenPainted);
       window.removeEventListener("pageshow", restoreImmediately);
       if (hideTimer) window.clearTimeout(hideTimer);
       window.clearTimeout(safetyTimer);
@@ -95,12 +131,8 @@ export function SiteLoader() {
       <div className="site-loader-glow" />
       <div className="site-loader-content">
         <div className="site-loader-logo-shell">
-          <Image
-            src="/images/logoCorto.svg"
-            alt="Principal S.I.L."
-            width={96}
-            height={84}
-            priority
+          <BrandLogo
+            preload
             className="site-loader-logo"
           />
         </div>

@@ -1,11 +1,12 @@
 import { createHash } from "node:crypto";
 import { contactFormSchema } from "@/lib/contact-schema";
+import { SITE_CONFIG } from "@/lib/site-config";
 
 export const runtime = "nodejs";
 
 const RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
 const RATE_LIMIT_MAX_REQUESTS = 5;
-const FORM_ENDPOINT = "https://formsubmit.co/ajax/castellin.marco@gmail.com";
+const FORM_ENDPOINT = `https://formsubmit.co/ajax/${SITE_CONFIG.contact.email}`;
 
 type RateLimitEntry = { count: number; expiresAt: number };
 const rateLimits = new Map<string, RateLimitEntry>();

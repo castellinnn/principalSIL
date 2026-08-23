@@ -51,9 +51,9 @@ export function Testimonials() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {guarantees.map((item, index) => (
+          {guarantees.map((item) => (
             <div
-              key={index}
+              key={item.title}
               className={`tech-panel p-7 rounded-2xl text-center flex flex-col items-center hover:-translate-y-1 transition-all duration-500 group bg-gradient-to-b ${item.gradient}`}
             >
               <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-5 text-primary group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(59,130,246,0.2)] transition-all duration-500">

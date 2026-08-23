@@ -488,8 +488,8 @@ html[data-skip-site-loader="true"] .site-loader {
   place-items: center;
   border: 1px solid rgba(34, 211, 238, 0.22);
   border-radius: 1.75rem;
-  background: linear-gradient(145deg, rgba(37, 99, 235, 0.12), rgba(6, 182, 212, 0.035));
-  box-shadow: 0 0 55px rgba(37, 99, 235, 0.18), inset 0 1px rgba(255, 255, 255, 0.06);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(219, 234, 254, 0.95));
+  box-shadow: 0 0 55px rgba(37, 99, 235, 0.22), inset 0 1px rgba(255, 255, 255, 0.8);
 }
 
 .site-loader-logo-shell::after {
@@ -561,18 +561,12 @@ html[data-skip-site-loader="true"] .site-loader {
 [data-reveal].is-visible {
   opacity: var(--reveal-opacity, 1);
   transform: translate3d(0, 0, 0) scale(1);
+  will-change: auto;
 }
 
 .reveal-about-photo { --reveal-scale: 0.95; --reveal-duration: 0.7s; }
 .reveal-about-copy { --reveal-x: 30px; --reveal-duration: 0.6s; --reveal-delay: 0.2s; }
 .reveal-about-kicker { --reveal-y: 10px; --reveal-duration: 0.4s; --reveal-delay: 0s; }
-.reveal-faq-watermark {
-  --reveal-opacity: 0.05;
-  --reveal-scale: 0.9;
-  --reveal-duration: 1.5s;
-  transform: translate(-50%, -50%) scale(var(--reveal-scale));
-}
-.reveal-faq-watermark.is-visible { transform: translate(-50%, -50%) scale(1); }
 .reveal-faq-kicker { --reveal-scale: 0.9; --reveal-duration: 0.5s; }
 .reveal-faq-heading { --reveal-y: 20px; --reveal-duration: 0.5s; }
 .reveal-faq-lead { --reveal-y: 20px; --reveal-duration: 0.5s; --reveal-delay: 0.1s; }
@@ -857,8 +851,14 @@ html[data-skip-site-loader="true"] .site-loader {
 @keyframes board-float { 50% { transform: rotateX(57deg) rotateZ(-17deg) translateY(-8px); } }
 @keyframes data-pulse { from { left: 0; opacity: 0; } 18%, 82% { opacity: 1; } to { left: 100%; opacity: 0; } }
 @keyframes core-ring { 50% { transform: scale(1.13); opacity: 0.52; } }
-@keyframes hologram-spin { to { transform: rotate(360deg) rotateX(58deg); } }
-@keyframes hologram-spin-reverse { to { transform: rotate(-360deg) rotateX(68deg) rotateY(28deg); } }
+@keyframes hologram-spin {
+  from { transform: rotate(0deg) rotateX(58deg); }
+  to { transform: rotate(360deg) rotateX(58deg); }
+}
+@keyframes hologram-spin-reverse {
+  from { transform: rotate(0deg) rotateX(68deg) rotateY(28deg); }
+  to { transform: rotate(-360deg) rotateX(68deg) rotateY(28deg); }
+}
 @keyframes loader-progress { 0% { transform: translateX(-120%); } 100% { transform: translateX(340%); } }
 @keyframes loader-spin { to { transform: rotate(360deg); } }
 @keyframes loader-logo { 50% { transform: translateY(-2px) scale(1.025); filter: drop-shadow(0 0 11px rgba(34, 211, 238, 0.35)); } }

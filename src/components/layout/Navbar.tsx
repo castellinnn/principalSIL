@@ -2,22 +2,12 @@
 
 import { useState, useEffect, useRef, type MouseEvent } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
+import { BrandLogo } from "@/components/ui/BrandLogo";
 import { Button } from "@/components/ui/button";
+import { NAV_ITEMS } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
-
-const navLinks = [
-  { name: "Servizi", href: "/#servizi", selector: "#servizi" },
-  { name: "Dove opero", href: "/#presenza-remoto", selector: "#presenza-remoto" },
-  { name: "Come funziona", href: "/#come-funziona", selector: "#come-funziona" },
-  { name: "Siti Web", href: "/#siti-web", selector: "#siti-web" },
-  { name: "Chi sono", href: "/#chi-sono", selector: "#chi-sono" },
-  { name: "Perché", href: "/#perche-principal", selector: "#perche-principal" },
-  { name: "FAQ", href: "/#faq", selector: "#faq" },
-  { name: "Contatti", href: "/#contatti", selector: "#contatti" },
-];
 
 export function Navbar() {
   const pathname = usePathname();
@@ -26,6 +16,8 @@ export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("");
   const progressRef = useRef<HTMLDivElement>(null);
+  const isScrolledRef = useRef(false);
+  const activeSectionRef = useRef("");
 
   const handleSectionNavigation = (
     event: MouseEvent<HTMLAnchorElement>,
@@ -81,15 +73,37 @@ export function Navbar() {
   }, [mobileMenuOpen]);
 
   useEffect(() => {
-    let animationFrame: number | null = null;
-    let lastSectionUpdate = -Infinity;
-    const sections = navLinks
-      .map((link) => ({ ...link, element: document.querySelector(link.selector) }))
-      .filter((item) => item.element);
+    const restorePageState = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      document.body.style.overflow = "";
+      setMobileMenuOpen(false);
+    };
 
-    const updateScrollState = (timestamp = performance.now()) => {
+    window.addEventListener("pageshow", restorePageState);
+    return () => window.removeEventListener("pageshow", restorePageState);
+  }, []);
+
+  useEffect(() => {
+    let animationFrame: number | null = null;
+    const sections = NAV_ITEMS
+      .map((link) => ({ ...link, element: document.querySelector(link.selector) }))
+      .filter((item): item is typeof item & { element: Element } => Boolean(item.element));
+    let sectionPositions: Array<{ href: string; top: number }> = [];
+
+    const measureSections = () => {
+      sectionPositions = sections.map((section) => ({
+        href: section.href,
+        top: section.element.getBoundingClientRect().top + window.scrollY,
+      }));
+    };
+
+    const updateScrollState = () => {
       animationFrame = null;
-      setIsScrolled(window.scrollY > 20);
+      const nextIsScrolled = window.scrollY > 20;
+      if (nextIsScrolled !== isScrolledRef.current) {
+        isScrolledRef.current = nextIsScrolled;
+        setIsScrolled(nextIsScrolled);
+      }
 
       const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
       const progress = scrollableHeight > 0 ? Math.min(window.scrollY / scrollableHeight, 1) : 0;
@@ -97,17 +111,15 @@ export function Navbar() {
         progressRef.current.style.transform = `scaleX(${progress})`;
       }
 
-      if (timestamp - lastSectionUpdate >= 100) {
-        lastSectionUpdate = timestamp;
-        const threshold = window.innerHeight * 0.4;
-        let currentSection = "";
+      const threshold = window.scrollY + window.innerHeight * 0.4;
+      let currentSection = "";
+      for (const section of sectionPositions) {
+        if (section.top > threshold) break;
+        currentSection = section.href;
+      }
 
-        sections.forEach((section) => {
-          if (section.element && section.element.getBoundingClientRect().top <= threshold) {
-            currentSection = section.href;
-          }
-        });
-
+      if (currentSection !== activeSectionRef.current) {
+        activeSectionRef.current = currentSection;
         setActiveSection(currentSection);
       }
     };
@@ -118,13 +130,26 @@ export function Navbar() {
       }
     };
 
+    const handleResize = () => {
+      measureSections();
+      handleScroll();
+    };
+
+    const restoreScrollState = () => {
+      measureSections();
+      handleScroll();
+    };
+
+    measureSections();
     updateScrollState();
     window.addEventListener("scroll", handleScroll, { passive: true });
-    window.addEventListener("resize", handleScroll);
+    window.addEventListener("resize", handleResize, { passive: true });
+    window.addEventListener("pageshow", restoreScrollState);
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", handleScroll);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("pageshow", restoreScrollState);
       if (animationFrame !== null) window.cancelAnimationFrame(animationFrame);
     };
   }, []);
@@ -133,7 +158,8 @@ export function Navbar() {
     <header
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-        isScrolled ? "py-2.5 glass border-b border-white/5" : "py-4 bg-transparent"
+        isScrolled ? "py-2.5 border-b border-white/5" : "py-4 bg-transparent",
+        isScrolled && !mobileMenuOpen && "glass"
       )}
     >
       <div className="container max-w-7xl mx-auto px-4 sm:px-5 md:px-8 flex items-center justify-between">
@@ -142,24 +168,20 @@ export function Navbar() {
           href={isHome ? "#hero" : "/#hero"}
           aria-label="Torna all'inizio"
           onClick={(event) => handleSectionNavigation(event, "#hero")}
-          className="z-50 flex min-h-11 min-w-11 items-center"
+          className="z-50 flex h-11 w-11 items-center justify-center rounded-xl border border-blue-100/80 bg-gradient-to-br from-white via-slate-50 to-blue-100 p-1 shadow-[0_6px_22px_rgba(37,99,235,0.2)]"
         >
-          <Image
-            src="/images/logoCorto.svg"
-            alt="Principal S.I.L."
-            width={48}
-            height={48}
-            className="object-contain h-9 lg:h-10"
+          <BrandLogo
+            loading="eager"
+            className="h-9 object-contain"
             style={{ width: "auto" }}
-            priority
           />
         </Link>
 
         {/* Desktop Nav */}
         <nav className="hidden lg:flex items-center gap-6">
           <ul className="flex items-center gap-5">
-            {navLinks.map((link) => (
-              <li key={link.name}>
+            {NAV_ITEMS.map((link) => (
+              <li key={link.href}>
                 <Link
                   href={isHome ? link.href.slice(1) : link.href}
                   onClick={(event) => handleSectionNavigation(event, link.selector)}
@@ -169,7 +191,7 @@ export function Navbar() {
                     activeSection === link.href && "text-white"
                   )}
                 >
-                  {link.name}
+                  {link.label}
                   <span
                     className={cn(
                       "absolute inset-x-0 -bottom-0.5 h-px origin-center bg-gradient-to-r from-primary to-cyan-400 transition-transform duration-300",
@@ -206,14 +228,15 @@ export function Navbar() {
         <div
           id="mobile-navigation"
           aria-hidden={!mobileMenuOpen}
+          inert={!mobileMenuOpen}
           className={cn(
             "fixed inset-0 z-40 flex flex-col items-center overflow-y-auto bg-background/95 px-5 pb-8 pt-24 backdrop-blur-xl transition-all duration-300 ease-in-out sm:justify-center sm:py-20",
             mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
           )}
         >
           <ul className="mb-8 flex flex-col items-center gap-5 sm:mb-12 sm:gap-7">
-            {navLinks.map((link) => (
-              <li key={link.name}>
+            {NAV_ITEMS.map((link) => (
+              <li key={link.href}>
                 <Link
                   href={isHome ? link.href.slice(1) : link.href}
                   onClick={(event) => handleSectionNavigation(event, link.selector)}
@@ -223,7 +246,7 @@ export function Navbar() {
                     activeSection === link.href && "text-cyan-300"
                   )}
                 >
-                  {link.name}
+                  {link.label}
                 </Link>
               </li>
             ))}

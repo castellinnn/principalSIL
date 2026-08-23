@@ -1,10 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { Send, CheckCircle2, AlertCircle, MapPin, Globe, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import { Send, CheckCircle2, AlertCircle, MapPin, Globe, Mail, Phone, X } from "lucide-react";
 import Link from "next/link";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/button";
+import { SITE_CONFIG } from "@/lib/site-config";
 import { cn } from "@/lib/utils";
 import type { ContactFormValues } from "@/lib/contact-schema";
 
@@ -40,6 +41,7 @@ export function Contact() {
   const [selectedModality, setSelectedModality] = useState("");
   const [errors, setErrors] = useState<FormErrors>({});
   const [modalLeaving, setModalLeaving] = useState(false);
+  const requestControllerRef = useRef<AbortController | null>(null);
 
   const closeModal = useCallback(() => {
     if (!submitStatus || modalLeaving) return;
@@ -67,6 +69,25 @@ export function Contact() {
       window.removeEventListener("keydown", closeOnEscape);
     };
   }, [closeModal, submitStatus]);
+
+  useEffect(() => {
+    const suspendRequest = () => requestControllerRef.current?.abort();
+    const restorePageState = (event: PageTransitionEvent) => {
+      if (!event.persisted) return;
+      document.body.style.overflow = "";
+      setIsSubmitting(false);
+      setSubmitStatus(null);
+      setModalLeaving(false);
+    };
+
+    window.addEventListener("pagehide", suspendRequest);
+    window.addEventListener("pageshow", restorePageState);
+    return () => {
+      window.removeEventListener("pagehide", suspendRequest);
+      window.removeEventListener("pageshow", restorePageState);
+      requestControllerRef.current?.abort();
+    };
+  }, []);
 
   const onSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -97,6 +118,7 @@ export function Contact() {
     setSubmitErrorMessage("");
 
     const controller = new AbortController();
+    requestControllerRef.current = controller;
     const timeoutId = window.setTimeout(() => controller.abort(), 15000);
 
     try {
@@ -126,6 +148,7 @@ export function Contact() {
       setSubmitStatus("error");
     } finally {
       window.clearTimeout(timeoutId);
+      if (requestControllerRef.current === controller) requestControllerRef.current = null;
       setIsSubmitting(false);
     }
   };
@@ -154,30 +177,30 @@ export function Contact() {
             <div className="space-y-6">
               <div className="flex items-start">
                 <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mt-1 flex-shrink-0">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  <Phone className="h-5 w-5" />
                 </div>
                 <div className="ml-4">
                   <h4 className="text-white font-medium">Telefono</h4>
                   <a
-                    href="tel:+393452294306"
+                    href={SITE_CONFIG.contact.phoneHref}
                     className="inline-block text-muted-foreground mt-1 hover:text-white hover:underline underline-offset-4 transition-colors"
                   >
-                    345 229 4306
+                    {SITE_CONFIG.contact.phone}
                   </a>
                 </div>
               </div>
               
               <div className="flex items-start">
                 <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary mt-1 flex-shrink-0">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9(2-2) 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  <Mail className="h-5 w-5" />
                 </div>
                 <div className="ml-4">
                   <h4 className="text-white font-medium">Email</h4>
                   <a
-                    href="mailto:castellin.marco@gmail.com"
+                    href={SITE_CONFIG.contact.emailHref}
                     className="inline-block text-muted-foreground mt-1 hover:text-white hover:underline underline-offset-4 transition-colors break-all"
                   >
-                    castellin.marco@gmail.com
+                    {SITE_CONFIG.contact.email}
                   </a>
                 </div>
               </div>
@@ -202,7 +225,7 @@ export function Contact() {
 
               <div className="pt-6">
                 <Button asChild variant="outline" className="w-full sm:w-auto border-white/10 hover:bg-white/5 text-white">
-                  <a href="https://wa.me/393452294306" target="_blank" rel="noopener noreferrer" className="flex items-center justify-center whitespace-nowrap">
+                  <a href={SITE_CONFIG.contact.whatsappHref} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center whitespace-nowrap">
                     Scrivimi su WhatsApp
                   </a>
                 </Button>
@@ -509,7 +532,7 @@ export function Contact() {
                       Torna al form
                     </Button>
                     <a
-                      href="https://wa.me/393452294306"
+                      href={SITE_CONFIG.contact.whatsappHref}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex min-h-11 items-center justify-center rounded-md border border-white/15 bg-white/5 px-5 text-sm font-medium text-white transition-colors hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary/60"
