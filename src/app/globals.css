@@ -283,7 +283,7 @@ body {
 
 @media (max-width: 767px) {
   .story-section::before {
-    background-size: 48px 48px;
+    display: none;
   }
 
   .story-section::after {
@@ -887,11 +887,18 @@ html[data-skip-site-loader="true"] .site-loader {
     -webkit-backdrop-filter: none;
   }
   .hero-tech-perspective {
-    width: min(130vw, 34rem);
-    opacity: 0.42;
+    top: auto;
+    right: 50%;
+    bottom: 3.25rem;
+    width: min(104vw, 26rem);
+    transform: translateX(50%);
+    opacity: 0.94;
   }
   .hero-tech-board {
-    animation-duration: 10s;
+    inset: 10%;
+    animation: none;
+    border-color: rgba(96, 165, 250, 0.38);
+    box-shadow: 0 26px 65px rgba(0, 0, 0, 0.5), inset 0 0 50px rgba(37, 99, 235, 0.14);
   }
   .hero-tech-hologram,
   .hero-tech-trace i {
@@ -902,14 +909,34 @@ html[data-skip-site-loader="true"] .site-loader {
   }
 
   .story-section {
-    background-color: #080b12;
-    background-attachment: scroll;
+    background: #080b12 !important;
+  }
+
+  .hero-mobile-model-space {
+    min-height: 19rem;
+  }
+
+  .hero-tech-grid {
+    opacity: 0.28;
+    mask-image: none;
+  }
+
+  .hero-tech-halo {
+    top: auto;
+    right: 50%;
+    bottom: 2rem;
+    width: min(112vw, 29rem);
+    transform: translateX(50%);
+    background: radial-gradient(circle, rgba(37, 99, 235, 0.24), rgba(6, 182, 212, 0.08) 43%, transparent 72%);
+  }
+
+  .hero-tech-vignette {
+    background: linear-gradient(180deg, rgba(8, 11, 18, 0.82) 0%, rgba(8, 11, 18, 0.48) 44%, rgba(8, 11, 18, 0.04) 66%, rgba(8, 11, 18, 0.5) 100%);
   }
 }
 
 .italy-map-shape {
-  opacity: 0.2;
-  filter: invert(1);
+  opacity: 0.5;
 }
 
 .map-hq-pulse {

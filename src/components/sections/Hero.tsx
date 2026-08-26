@@ -7,11 +7,11 @@ export function Hero() {
   return (
     <section
       id="hero"
-      className="relative min-h-[min(100svh,820px)] flex flex-col items-center justify-center overflow-hidden scroll-mt-24"
+      className="relative flex min-h-[min(100svh,820px)] flex-col items-center justify-center overflow-hidden scroll-mt-24"
     >
       <NetworkBackground />
 
-      <div className="container max-w-7xl mx-auto px-4 sm:px-5 md:px-8 pt-20 sm:pt-24 pb-8 sm:pb-10 relative z-30 flex-1 grid lg:grid-cols-[1.08fr_0.92fr] items-center gap-8 lg:gap-14 w-full">
+      <div className="container relative z-30 mx-auto grid w-full max-w-7xl flex-1 items-center gap-0 px-4 pb-2 pt-24 sm:gap-8 sm:px-5 sm:pb-10 sm:pt-24 md:px-8 lg:grid-cols-[1.08fr_0.92fr] lg:gap-14">
         <div className="max-w-2xl mx-auto lg:mx-0 text-center lg:text-left">
           <div className="hero-reveal hero-reveal-1 inline-flex items-center gap-2.5 rounded-full border border-cyan-400/20 bg-cyan-400/[0.07] px-4 py-2 mb-4 sm:mb-5">
             <span className="relative flex h-2 w-2">
@@ -63,6 +63,7 @@ export function Hero() {
           </div>
         </div>
 
+        <div className="hero-mobile-model-space lg:hidden" aria-hidden="true" />
         <div className="hidden lg:block min-h-[470px]" aria-hidden="true" />
       </div>
 

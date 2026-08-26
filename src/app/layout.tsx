@@ -80,7 +80,7 @@ export default function RootLayout({
   return (
     <html lang="it" className={`${montserrat.variable} h-full antialiased`} suppressHydrationWarning>
       <head>
-        <link rel="preload" href="/images/italy.svg" as="image" type="image/svg+xml" />
+        <link rel="preload" href="/images/italy.svg?v=2" as="image" type="image/svg+xml" />
         <script
           dangerouslySetInnerHTML={{
             __html: `try{var n=performance.getEntriesByType("navigation")[0];if(sessionStorage.getItem("principal-sil-ready")==="1"||n&&n.type==="back_forward")document.documentElement.dataset.skipSiteLoader="true"}catch(e){}`,

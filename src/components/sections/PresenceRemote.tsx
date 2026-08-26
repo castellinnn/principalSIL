@@ -163,7 +163,7 @@ export function PresenceRemote() {
               <div className="relative w-full h-[280px] flex items-center justify-center my-6">
                 <svg viewBox="0 0 1024 1024" className="w-full h-full text-white" fill="currentColor">
                   <image
-                    href="/images/italy.svg"
+                    href="/images/italy.svg?v=2"
                     width="1024"
                     height="1024"
                     className="italy-map-shape"
