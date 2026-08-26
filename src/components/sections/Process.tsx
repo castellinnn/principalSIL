@@ -101,7 +101,7 @@ export function Process() {
                     <div className="text-primary">
                       {step.icon}
                     </div>
-                    <h3 className="text-lg font-semibold text-white">{step.title}</h3>
+                    <h3 className="content-title-accent text-lg font-semibold">{step.title}</h3>
                   </div>
                   <p className="text-muted-foreground text-sm leading-relaxed">
                     {step.description}
@@ -125,7 +125,7 @@ export function Process() {
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <span className="text-primary">{step.icon}</span>
-                  <h3 className="font-semibold text-white">{step.title}</h3>
+                  <h3 className="content-title-accent font-semibold">{step.title}</h3>
                 </div>
                 <p className="text-muted-foreground text-sm leading-relaxed">
                   {step.description}

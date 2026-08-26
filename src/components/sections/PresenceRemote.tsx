@@ -63,7 +63,7 @@ export function PresenceRemote() {
                   </div>
                   <div>
                     <span className="text-xs font-semibold tracking-wider text-primary uppercase">IN PRESENZA</span>
-                    <h3 className="text-xl font-bold text-white mt-0.5">Operatività Locale</h3>
+                    <h3 className="content-title-accent mt-0.5 text-xl font-bold">Operatività Locale</h3>
                   </div>
                 </div>
                 <div className="px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary self-start sm:self-center">
@@ -110,7 +110,7 @@ export function PresenceRemote() {
                   </div>
                   <div>
                     <span className="text-xs font-semibold tracking-wider text-cyan-400 uppercase">DA REMOTO</span>
-                    <h3 className="text-xl font-bold text-white mt-0.5">Operatività Nazionale</h3>
+                    <h3 className="content-title-accent mt-0.5 text-xl font-bold">Operatività Nazionale</h3>
                   </div>
                 </div>
                 <div className="px-3 py-1 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 self-start sm:self-center">
@@ -162,12 +162,11 @@ export function PresenceRemote() {
               {/* Minimal Italy Map Graphic */}
               <div className="relative w-full h-[280px] flex items-center justify-center my-6">
                 <svg viewBox="0 0 1024 1024" className="w-full h-full text-white" fill="currentColor">
-                  <rect
+                  <image
+                    href="/images/italy.svg"
                     width="1024"
                     height="1024"
-                    fill="currentColor"
-                    opacity="0.2"
-                    mask="url(#italy-coverage-mask)"
+                    className="italy-map-shape"
                   />
                   
                   <g className="text-primary">
@@ -195,8 +194,7 @@ export function PresenceRemote() {
                     />
                   ))}
 
-                  {/* La maschera mantiene i nodi esattamente all'interno della sagoma italiana. */}
-                  <g mask="url(#italy-coverage-mask)">
+                  <g>
                     {coverageNodes.map((pt, i) => (
                       <g key={`node-${i}`}>
                         <circle
@@ -213,17 +211,6 @@ export function PresenceRemote() {
 
                   {/* Gradient for lines */}
                   <defs>
-                    <mask
-                      id="italy-coverage-mask"
-                      maskUnits="userSpaceOnUse"
-                      x="0"
-                      y="0"
-                      width="1024"
-                      height="1024"
-                      style={{ maskType: "alpha" }}
-                    >
-                      <image href="/images/italy.svg" width="1024" height="1024" />
-                    </mask>
                     <linearGradient id="gradient-line" x1="0%" y1="0%" x2="100%" y2="100%">
                       <stop offset="0%" stopColor="#2563EB" stopOpacity="0.8" />
                       <stop offset="100%" stopColor="#22D3EE" stopOpacity="0.2" />

@@ -219,11 +219,11 @@ export function About() {
 
           <div className="mt-8 grid grid-cols-2 gap-3">
             <div className="tech-panel rounded-xl p-4">
-              <p className="text-lg font-bold text-white mb-1">Competenza</p>
+              <p className="content-title-accent mb-1 text-lg font-bold">Competenza</p>
               <p className="text-sm text-muted-foreground">Aggiornamento continuo</p>
             </div>
             <div className="tech-panel rounded-xl p-4">
-              <p className="text-lg font-bold text-white mb-1">Disponibilità</p>
+              <p className="content-title-accent mb-1 text-lg font-bold">Disponibilità</p>
               <p className="text-sm text-muted-foreground">Supporto rapido e chiaro</p>
             </div>
           </div>

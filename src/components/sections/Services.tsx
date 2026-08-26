@@ -96,7 +96,7 @@ export function Services() {
                   </span>
                 </div>
 
-                <h3 className="text-xl font-semibold text-white mb-3 group-hover:text-primary transition-colors duration-300">
+                <h3 className="content-title-accent mb-3 text-xl font-semibold transition-colors duration-300 group-hover:text-cyan-200">
                   {service.title}
                 </h3>
 

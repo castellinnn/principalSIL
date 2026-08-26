@@ -59,7 +59,7 @@ export function Testimonials() {
               <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center mb-5 text-primary group-hover:scale-110 group-hover:shadow-[0_0_25px_rgba(59,130,246,0.2)] transition-all duration-500">
                 {item.icon}
               </div>
-              <h3 className="text-xl font-semibold text-white mb-3">{item.title}</h3>
+              <h3 className="content-title-accent mb-3 text-xl font-semibold">{item.title}</h3>
               <p className="text-muted-foreground leading-relaxed">{item.description}</p>
             </div>
           ))}

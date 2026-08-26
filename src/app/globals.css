@@ -124,6 +124,10 @@ body {
   line-height: 1.75;
 }
 
+.content-title-accent {
+  color: #7dd3fc;
+}
+
 /* Percorso narrativo delle sezioni */
 .story-section {
   --story-accent: 37 99 235;
@@ -283,10 +287,7 @@ body {
   }
 
   .story-section::after {
-    top: 5rem;
-    right: -0.5rem;
-    left: auto !important;
-    font-size: 9rem;
+    display: none;
   }
 
   .story-chapter-label {
@@ -899,6 +900,16 @@ html[data-skip-site-loader="true"] .site-loader {
   .story-section > .absolute.inset-0.pointer-events-none {
     display: none;
   }
+
+  .story-section {
+    background-color: #080b12;
+    background-attachment: scroll;
+  }
+}
+
+.italy-map-shape {
+  opacity: 0.2;
+  filter: invert(1);
 }
 
 .map-hq-pulse {

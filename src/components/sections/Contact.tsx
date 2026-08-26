@@ -180,7 +180,7 @@ export function Contact() {
                   <Phone className="h-5 w-5" />
                 </div>
                 <div className="ml-4">
-                  <h4 className="text-white font-medium">Telefono</h4>
+                  <h4 className="content-title-accent font-medium">Telefono</h4>
                   <a
                     href={SITE_CONFIG.contact.phoneHref}
                     className="inline-block text-muted-foreground mt-1 hover:text-white hover:underline underline-offset-4 transition-colors"
@@ -195,7 +195,7 @@ export function Contact() {
                   <Mail className="h-5 w-5" />
                 </div>
                 <div className="ml-4">
-                  <h4 className="text-white font-medium">Email</h4>
+                  <h4 className="content-title-accent font-medium">Email</h4>
                   <a
                     href={SITE_CONFIG.contact.emailHref}
                     className="inline-block text-muted-foreground mt-1 hover:text-white hover:underline underline-offset-4 transition-colors break-all"
@@ -207,7 +207,7 @@ export function Contact() {
 
               {/* Dove opero */}
               <div className="pt-6 border-t border-white/5">
-                <h4 className="text-white font-semibold mb-3">Dove opero</h4>
+                <h4 className="content-title-accent mb-3 font-semibold">Dove opero</h4>
                 <div className="space-y-3 text-sm text-muted-foreground">
                   <p className="flex items-center gap-2">
                     <MapPin className="h-4 w-4 text-[#06B6D4]/70 shrink-0" />

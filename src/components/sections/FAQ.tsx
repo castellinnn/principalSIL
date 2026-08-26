@@ -72,7 +72,7 @@ export function FAQ() {
                 className="w-full flex items-center justify-between p-4 sm:p-5 md:p-6 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset"
                 aria-expanded={openIndex === index}
               >
-                <span className="pr-3 text-base font-medium leading-snug text-white sm:pr-4 sm:text-lg">{faq.question}</span>
+                <span className="pr-3 text-base font-semibold leading-snug text-sky-300 sm:pr-4 sm:text-lg">{faq.question}</span>
                 <span className="ml-4 flex-shrink-0 text-muted-foreground">
                   {openIndex === index ? <Minus className="h-5 w-5 text-primary" /> : <Plus className="h-5 w-5" />}
                 </span>
@@ -80,7 +80,7 @@ export function FAQ() {
               
               <div className={`faq-answer${openIndex === index ? " is-open" : ""}`} aria-hidden={openIndex !== index}>
                 <div>
-                    <div className="px-4 pb-5 text-sm leading-relaxed text-muted-foreground sm:px-6 sm:pb-6 sm:text-base">
+                    <div className="px-4 pb-5 text-sm leading-relaxed text-white/70 sm:px-6 sm:pb-6 sm:text-base">
                       {faq.answer}
                     </div>
                 </div>
