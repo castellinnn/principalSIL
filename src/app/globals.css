@@ -1128,12 +1128,12 @@ html[data-skip-site-loader="true"] .site-loader {
     height: auto;
     min-height: 100svh;
     max-height: none;
-    padding: 5.75rem 1rem 1rem;
+    padding: 7.25rem 1rem 3.25rem;
   }
 
   .hero-kicker {
     justify-content: flex-start;
-    margin-bottom: 1rem;
+    margin-bottom: 1.15rem;
     font-size: 0.67rem;
     text-align: left;
   }
@@ -1144,11 +1144,12 @@ html[data-skip-site-loader="true"] .site-loader {
   .hero-title {
     max-width: 12ch;
     margin-inline: 0;
-    font-size: clamp(2.4rem, 11.5vw, 3.5rem);
+    font-size: clamp(2.3rem, 10.8vw, 3.35rem);
+    line-height: 0.98;
   }
 
   .hero-description {
-    margin-top: 1.25rem;
+    margin-top: 1.4rem;
     margin-inline: 0;
     font-size: 0.98rem;
     line-height: 1.62;
@@ -1156,33 +1157,49 @@ html[data-skip-site-loader="true"] .site-loader {
 
   .hero-actions {
     align-items: stretch;
-    gap: 0.6rem;
-    margin-top: 1.15rem;
+    gap: 0.9rem;
+    margin-top: 1.65rem;
   }
 
-  .hero-action-button { font-size: 0.8rem; }
+  .hero-action-button {
+    height: 3.35rem;
+    font-size: 0.84rem;
+  }
 
   .hero-service-list {
     width: 100%;
-    margin-top: 1.25rem;
+    margin-top: 1.75rem;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.45rem;
+    gap: 0.6rem;
   }
 
   .hero-service-list li {
     width: 100%;
-    min-height: 3.2rem;
+    min-height: 4rem;
     flex-direction: column;
-    gap: 0.25rem;
-    padding: 0.35rem 0.2rem;
-    font-size: 0.65rem;
+    gap: 0.38rem;
+    padding: 0.55rem 0.25rem;
+    font-size: 0.68rem;
   }
-  .hero-visual { min-height: 10rem; }
+
+  .hero-service-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .hero-service-icon svg {
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  .hero-visual { min-height: 22rem; }
+
   .hero-availability {
-    margin-top: 0.5rem;
+    margin-top: 1.15rem;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.35rem 1rem;
+    gap: 0.65rem 1rem;
+    line-height: 1.45;
     text-align: center;
   }
 
@@ -1197,10 +1214,10 @@ html[data-skip-site-loader="true"] .site-loader {
   .hero-tech-perspective {
     top: auto;
     right: 50%;
-    bottom: 3.25rem;
-    width: min(104vw, 26rem);
+    bottom: 10.5rem;
+    width: min(112vw, 30rem);
     transform: translateX(50%);
-    opacity: 0.94;
+    opacity: 1;
   }
   .hero-tech-board {
     inset: 10%;
@@ -1224,19 +1241,27 @@ html[data-skip-site-loader="true"] .site-loader {
   .hero-tech-halo {
     top: auto;
     right: 50%;
-    bottom: 2rem;
-    width: min(112vw, 29rem);
+    bottom: 9rem;
+    width: min(122vw, 32rem);
     transform: translateX(50%);
     background: radial-gradient(circle, rgba(37, 99, 235, 0.24), rgba(6, 182, 212, 0.08) 43%, transparent 72%);
   }
 
   .hero-tech-vignette {
-    background: linear-gradient(180deg, rgba(8, 11, 18, 0.82) 0%, rgba(8, 11, 18, 0.48) 44%, rgba(8, 11, 18, 0.04) 66%, rgba(8, 11, 18, 0.5) 100%);
+    background: linear-gradient(180deg, #080b12 0%, rgba(8, 11, 18, 0.9) 38%, rgba(8, 11, 18, 0.16) 55%, rgba(8, 11, 18, 0.06) 72%, rgba(8, 11, 18, 0.76) 91%, #080b12 100%);
   }
 }
 
 @media (max-width: 520px) {
   .hero-actions { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 380px) {
+  .hero-shell { padding-inline: 0.85rem; }
+  .hero-visual { min-height: 20rem; }
+  .hero-tech-perspective { width: 116vw; }
+  .hero-service-list { gap: 0.4rem; }
+  .hero-service-list li { font-size: 0.62rem; }
 }
 
 .italy-map-shape {
